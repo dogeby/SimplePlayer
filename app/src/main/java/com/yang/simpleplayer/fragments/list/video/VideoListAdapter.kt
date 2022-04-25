@@ -2,6 +2,8 @@ package com.yang.simpleplayer.fragments.list.video
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ViewVideoItemBinding
@@ -9,13 +11,16 @@ import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.utils.Format
 import com.yang.simpleplayer.utils.ImageLoader
 
-class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>() {
+class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(), Filterable {
 
     private val videos = mutableListOf<Video>()
+    private val filteredVideos = mutableListOf<Video>()
     var itemViewOnclick: (Video) -> Unit = {}
     var moreBtnOnClick: (Video) -> Unit = {}
 
     fun updateVideos(videos: List<Video>) {
+        filteredVideos.clear()
+        filteredVideos.addAll(videos)
         this.videos.clear()
         this.videos.addAll(videos)
         notifyDataSetChanged()
@@ -28,11 +33,39 @@ class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(
     }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
-        val video = videos[position]
+        val video = filteredVideos[position]
         holder.bind(video)
     }
 
-    override fun getItemCount() = videos.size
+    override fun getItemCount() = filteredVideos.size
+
+
+    override fun getFilter(): Filter {
+        return ItemFilter()
+    }
+
+    inner class ItemFilter:Filter() {
+        override fun performFiltering(constraint: CharSequence?) = FilterResults().apply {
+            val constraintString = constraint.toString().lowercase()
+            values = if(constraintString.isNullOrBlank()) {
+                videos
+            }
+            else {
+                val filteringVideos = mutableListOf<Video>()
+                videos.forEach { video ->
+                    if(video.name.lowercase().contains(constraintString))
+                        filteringVideos.add(video)
+                }
+                filteringVideos
+            }
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            filteredVideos.clear()
+            filteredVideos.addAll(results?.values as MutableList<Video>)
+            notifyDataSetChanged()
+        }
+    }
 
     inner class VideoViewHolder(binding:ViewVideoItemBinding) : RecyclerView.ViewHolder(binding.root) {
         private val thumbnail = binding.thumbnail

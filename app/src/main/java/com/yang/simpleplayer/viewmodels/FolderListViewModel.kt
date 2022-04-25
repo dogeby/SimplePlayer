@@ -12,7 +12,7 @@ class FolderListViewModel(private val repository: VideoRepository, application: 
 
     val progressVisible = MutableLiveData<Boolean>()
     val folderNames = MutableLiveData<List<String>>()
-    val exceptionMessage = MutableLiveData<String>()
+    val exceptionMessageResId = MutableLiveData<String>()
 
     fun list() {
         progressVisible.postValue(true)
@@ -21,7 +21,7 @@ class FolderListViewModel(private val repository: VideoRepository, application: 
                 this.folderNames.postValue(folderNames)
             }
             result.onFailure {
-                exceptionMessage.postValue(it.message)
+                exceptionMessageResId.postValue(it.message)
             }
             progressVisible.postValue(false)
         }
@@ -34,7 +34,7 @@ class FolderListViewModel(private val repository: VideoRepository, application: 
                 this.folderNames.postValue(folderNames)
             }
             result.onFailure {
-                if(!it.message.isNullOrBlank()) exceptionMessage.postValue(it.message)
+                if(!it.message.isNullOrBlank()) exceptionMessageResId.postValue(it.message)
             }
             progressVisible.postValue(false)
         }

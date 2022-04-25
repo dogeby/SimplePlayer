@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.repositories.VideoRepository
+import com.yang.simpleplayer.utils.Format
 import com.yang.simpleplayer.viewmodels.VideoListViewModel
 
 class VideoListFragment : Fragment() {
@@ -26,7 +28,7 @@ class VideoListFragment : Fragment() {
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
         try {
             arguments?.let {
-                _source = it.getString(R.string.folderNameKey.toString())
+                _source = it.getString(getString(R.string.folderNameKey))
                 // TODO: id 받을시 코드 작성
             }
             _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo,
@@ -51,10 +53,18 @@ class VideoListFragment : Fragment() {
         viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
             (activity as FragmentNeeds).setProgressBar(progressVisible)
         }
-        viewModel.exceptionMessage.observe(viewLifecycleOwner) { exceptionMessage ->
-            (activity as FragmentNeeds).showToastMessage(exceptionMessage)
+        viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
+            (activity as FragmentNeeds).showToastMessage(getString(exceptionMessageResId.toInt()))
         }
         (activity as FragmentNeeds).setRefreshListener { viewModel.update(source) }
+        (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean { return false }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+        })
+        (activity as FragmentNeeds).setAppbarTitleText(Format.getParentFolderName(source.toString()))
         viewModel.list(source)
     }
 

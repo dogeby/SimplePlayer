@@ -1,6 +1,7 @@
 package com.yang.simpleplayer.activities.list
 
 import android.app.Application
+import androidx.appcompat.widget.SearchView
 
 interface FragmentNeeds {
     fun getApplication(): Application
@@ -9,4 +10,5 @@ interface FragmentNeeds {
     fun setRefreshListener(update:(()->Unit))
     fun startVideoListFragment(folderName: String)
     fun setAppbarTitleText(title:String)
+    fun setOnQueryTextListener(listener: SearchView.OnQueryTextListener)
 }

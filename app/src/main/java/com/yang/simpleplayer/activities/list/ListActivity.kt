@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ActivityListBinding
@@ -31,47 +32,58 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
          * 앱바 설정
          * SearchView name 검색기능, Settings Btn
          */
-        binding.searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean { return false }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                TODO("입력할때마다 검색 ")
-                return false
-            }
-        })
         binding.settings.setOnClickListener {
             // TODO: Settings 버튼 클릭 리스너
         }
+        binding.searchBar.setOnSearchClickListener { binding.appbarTitle.visibility = View.GONE }
+        binding.searchBar.setOnCloseListener { binding.appbarTitle.visibility = View.VISIBLE; false }
 
         binding.tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when(tab?.position) {
+            val listener = {position:Int ->
+                when(position) {
                     0 -> changeRecyclerViewFragment(FolderListFragment(), false)
                     1 -> changeRecyclerViewFragment(RecentListFragment(), false)
                     2 -> changeRecyclerViewFragment(PlaylistListFragment(), false)
                 }
             }
+            override fun onTabSelected(tab: TabLayout.Tab?) { tab?.position?.let { listener(it) }}
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
-            override fun onTabReselected(tab: TabLayout.Tab?) { }
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                clearBackStack()
+                tab?.position?.let { listener(it) }}
         })
+    }
 
+    private fun clearBackStack() {
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     private fun changeRecyclerViewFragment(fragment: Fragment, isAddToBackStack:Boolean) {
+        setSearchBarIconified()
         supportFragmentManager.beginTransaction().apply {
             replace(binding.recyclerViewContainer.id, fragment)
             if(isAddToBackStack) addToBackStack(null)
         }.commit()
     }
 
+    private fun setSearchBarIconified() {
+        binding.searchBar.isIconified = true
+        binding.searchBar.isIconified = true
+    }
+
+    override fun onBackPressed() {
+        if(!binding.searchBar.isIconified) {
+            setSearchBarIconified()
+        }
+        else super.onBackPressed()
+    }
+
     override fun showToastMessage(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     override fun setProgressBar(visible:Boolean) {
-        fun Boolean.toVisibility(): Int {
-            return if(this) View.VISIBLE else View.GONE
-        }
-        binding.progressBar.visibility = visible.toVisibility()
+        binding.progressBar.visibility = if(visible) View.VISIBLE else View.GONE
     }
 
     override fun setRefreshListener(update: () -> Unit) {
@@ -83,11 +95,13 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
 
     override fun startVideoListFragment(folderName: String) {
         val bundle = Bundle()
-        bundle.putString(R.string.folderNameKey.toString(), folderName)
+        bundle.putString(getString(R.string.folderNameKey), folderName)
         val fragment = VideoListFragment()
         fragment.arguments = bundle
         changeRecyclerViewFragment(fragment, true)
     }
 
     override fun setAppbarTitleText(title: String) { binding.appbarTitle.text = title }
+
+    override fun setOnQueryTextListener(listener: SearchView.OnQueryTextListener) { binding.searchBar.setOnQueryTextListener(listener) }
 }

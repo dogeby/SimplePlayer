@@ -19,13 +19,13 @@ class VideoListViewModel(private val repository: VideoRepository, application: A
 
     val progressVisible = MutableLiveData<Boolean>()
     val videos = MutableLiveData<List<Video>>()
-    val exceptionMessage = MutableLiveData<String>()
+    val exceptionMessageResId = MutableLiveData<String>()
 
     fun list(source:Any) {
         progressVisible.postValue(true)
         repository.requestVideos(getApplication(), source) { requestVideosResult ->
             requestVideosResult.onSuccess { videos.postValue(it) }
-            requestVideosResult.onFailure { exceptionMessage.postValue(it.message) }
+            requestVideosResult.onFailure { exceptionMessageResId.postValue(it.message) }
             progressVisible.postValue(false)
         }
     }
@@ -35,7 +35,7 @@ class VideoListViewModel(private val repository: VideoRepository, application: A
             progressVisible.postValue(true)
             repository.updateVideos(getApplication(), source){ result ->
                 result.onSuccess { videos.postValue(it) }
-                result.onFailure { if(!it.message.isNullOrBlank()) exceptionMessage.postValue(it.message) }
+                result.onFailure { if(!it.message.isNullOrBlank()) exceptionMessageResId.postValue(it.message) }
                 progressVisible.postValue(false)
             }
         }

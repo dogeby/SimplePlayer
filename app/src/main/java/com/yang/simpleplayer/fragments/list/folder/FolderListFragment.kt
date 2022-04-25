@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentFolderListBinding
 import com.yang.simpleplayer.repositories.VideoRepository
@@ -46,10 +48,18 @@ class FolderListFragment : Fragment() {
         viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
             (activity as FragmentNeeds).setProgressBar(progressVisible)
         }
-        viewModel.exceptionMessage.observe(viewLifecycleOwner) { exceptionMessage ->
-            (activity as FragmentNeeds).showToastMessage(exceptionMessage)
+        viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
+            (activity as FragmentNeeds).showToastMessage(getString(exceptionMessageResId.toInt()))
         }
         (activity as FragmentNeeds).setRefreshListener { viewModel.update() }
+        (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean { return false }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+        })
+        (activity as FragmentNeeds).setAppbarTitleText(getString(R.string.appbar_title_folder))
         viewModel.list()
     }
 
