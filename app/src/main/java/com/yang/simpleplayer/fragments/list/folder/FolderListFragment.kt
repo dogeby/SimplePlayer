@@ -1,20 +1,15 @@
 package com.yang.simpleplayer.fragments.list.folder
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.yang.simpleplayer.activities.list.FragmentNeeds
-import com.yang.simpleplayer.activities.list.ListActivity
 import com.yang.simpleplayer.databinding.FragmentFolderListBinding
-import com.yang.simpleplayer.repositories.FolderRepository
+import com.yang.simpleplayer.repositories.VideoRepository
 import com.yang.simpleplayer.viewmodels.FolderListViewModel
-import java.lang.Exception
 
 class FolderListFragment : Fragment() {
 
@@ -25,10 +20,10 @@ class FolderListFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val folderRepo = FolderRepository()
+        val videoRepo = VideoRepository()
         _binding = FragmentFolderListBinding.inflate(layoutInflater)
         try {
-            _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(folderRepo,
+            _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(videoRepo,
                     (activity as FragmentNeeds).getApplication())).get(FolderListViewModel::class.java)
             initUi()
         } catch (e: Exception) {
@@ -45,7 +40,7 @@ class FolderListFragment : Fragment() {
         }
         binding.folderList.adapter = adapter
 
-        viewModel.folders.observe(viewLifecycleOwner) { folders ->
+        viewModel.folderNames.observe(viewLifecycleOwner) { folders ->
             adapter.updateFolders(folders)
         }
         viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
@@ -55,7 +50,7 @@ class FolderListFragment : Fragment() {
             (activity as FragmentNeeds).showToastMessage(exceptionMessage)
         }
         (activity as FragmentNeeds).setRefreshListener { viewModel.update() }
-        viewModel.init()
+        viewModel.list()
     }
 
     override fun onDestroyView() {

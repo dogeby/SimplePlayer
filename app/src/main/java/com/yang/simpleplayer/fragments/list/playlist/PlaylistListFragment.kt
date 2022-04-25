@@ -1,10 +1,10 @@
 package com.yang.simpleplayer.fragments.list.playlist
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.yang.simpleplayer.R
 
 // TODO: 플레이리스트 리스트 fragment 작성

@@ -5,7 +5,7 @@
     <string name="appbar_title_playlist">재생목록</string>
 
     <!-- Bundle Key-->
-    <string name="videoIdsKey">videoIds</string>
+    <string name="folderNameKey">folderName</string>
 
     <!-- Exception Message-->
     <string name="empty_video_exception">비디오를 찾을수 없습니다</string>

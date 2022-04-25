@@ -1,18 +1,15 @@
 package com.yang.simpleplayer.fragments.list.video
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.list.FragmentNeeds
-import com.yang.simpleplayer.activities.list.ListActivity
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.repositories.VideoRepository
-import com.yang.simpleplayer.viewmodels.FolderListViewModel
 import com.yang.simpleplayer.viewmodels.VideoListViewModel
 
 class VideoListFragment : Fragment() {
@@ -21,17 +18,18 @@ class VideoListFragment : Fragment() {
     private val binding: FragmentVideoListBinding get() = requireNotNull(_binding)
     private var _viewModel: VideoListViewModel? = null
     private val viewModel: VideoListViewModel get() = requireNotNull(_viewModel)
-    private var _videoIds: LongArray? = null
-    private val videoIds: LongArray get() = requireNotNull(_videoIds)
+    private var _source: Any? = null
+    private val source: Any get() = requireNotNull(_source)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val videoRepo = VideoRepository()
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
         try {
             arguments?.let {
-                _videoIds = it.getLongArray(R.string.videoIdsKey.toString())
+                _source = it.getString(R.string.folderNameKey.toString())
+                // TODO: id 받을시 코드 작성
             }
-            _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo, videoIds,
+            _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo,
                     (activity as FragmentNeeds).getApplication())).get(VideoListViewModel::class.java)
             initUi()
         } catch (e: Exception) {
@@ -41,7 +39,10 @@ class VideoListFragment : Fragment() {
     }
 
     private fun initUi() {
-        val adapter = VideoListAdapter()
+        val adapter = VideoListAdapter().apply {
+            // TODO: 비디오재생 코드 작성
+            // TODO: morebtn 동작 코드 작성
+        }
         binding.videoList.adapter = adapter
 
         viewModel.videos.observe(viewLifecycleOwner) { videos ->
@@ -53,8 +54,8 @@ class VideoListFragment : Fragment() {
         viewModel.exceptionMessage.observe(viewLifecycleOwner) { exceptionMessage ->
             (activity as FragmentNeeds).showToastMessage(exceptionMessage)
         }
-        (activity as FragmentNeeds).setRefreshListener { viewModel.update() }
-        viewModel.init()
+        (activity as FragmentNeeds).setRefreshListener { viewModel.update(source) }
+        viewModel.list(source)
     }
 
     override fun onDestroyView() {

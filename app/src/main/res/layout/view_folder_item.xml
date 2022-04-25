@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintStart_toStartOf="parent">
-        <!--TODO 폴더 썸네일 만들기-->
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"

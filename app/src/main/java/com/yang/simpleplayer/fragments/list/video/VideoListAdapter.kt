@@ -1,6 +1,5 @@
 package com.yang.simpleplayer.fragments.list.video
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -41,15 +40,12 @@ class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(
         private val duration = binding.duration
         private val moreBtn = binding.moreBtn
 
-        fun bind(item: Video) {
-            Log.d("video", "${item.name} ${item.duration}")
-            name.text = item.name
-            ImageLoader.loadThumbnail(thumbnail.context, item) { bitmap ->
-                thumbnail.setImageBitmap(bitmap)
-            }
-            duration.text = Format.msToHourMinSecond(item.duration.toLong())
-            itemView.setOnClickListener { itemViewOnclick(item) }
-            moreBtn.setOnClickListener { moreBtnOnClick(item) }
+        fun bind(video: Video) {
+            name.text = Format.splitExtension(video.name)
+            ImageLoader.loadThumbnail(video.contentUri, thumbnail)
+            duration.text = Format.msToHourMinSecond(video.duration)
+            itemView.setOnClickListener { itemViewOnclick(video) }
+            moreBtn.setOnClickListener { moreBtnOnClick(video) }
         }
     }
 }

@@ -1,24 +1,19 @@
 package com.yang.simpleplayer.fragments.list.folder
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ViewFolderItemBinding
-import com.yang.simpleplayer.databinding.ViewVideoItemBinding
-import com.yang.simpleplayer.models.Folder
-import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.utils.Format
-import com.yang.simpleplayer.utils.ImageLoader
 
 class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolder>() {
 
-    private val folders = mutableListOf<Folder>()
-    var itemViewOnclick: (LongArray) -> Unit = {}
-    var moreBtnOnclick: (Folder) -> Unit = {}
+    private val folders = mutableListOf<String>()
+    var itemViewOnclick: (String) -> Unit = {}
+    var moreBtnOnclick: (String) -> Unit = {}
 
-    fun updateFolders(folders: List<Folder>) {
+    fun updateFolders(folders: List<String>) {
         this.folders.clear()
         this.folders.addAll(folders)
         notifyDataSetChanged()
@@ -43,15 +38,13 @@ class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolde
         private val name = binding.name
         private val moreBtn = binding.moreBtn
 
-        fun bind(item: Folder) {
-            name.text = item.name
+        fun bind(item: String) {
+            name.text = Format.getParentFolderName(item)
             itemView.setOnClickListener {
-                val videos = item.videoFiles.toList()
-                val videoIds = LongArray(videos.size) { videos[it].id }
-                itemViewOnclick(videoIds)
+                itemViewOnclick(item)
             }
             moreBtn.setOnClickListener { moreBtnOnclick(item) }
-            // TODO:  폴더리스트어댑터 holder.thumbnails 작성하기
+            // TODO: holder.thumbnails 작성
         }
     }
 }

@@ -1,15 +1,11 @@
 package com.yang.simpleplayer.activities.list
 
-import android.app.Application
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.tabs.TabLayout
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ActivityListBinding
@@ -17,7 +13,6 @@ import com.yang.simpleplayer.fragments.list.folder.FolderListFragment
 import com.yang.simpleplayer.fragments.list.playlist.PlaylistListFragment
 import com.yang.simpleplayer.fragments.list.recent.RecentListFragment
 import com.yang.simpleplayer.fragments.list.video.VideoListFragment
-import com.yang.simpleplayer.models.Video
 
 class ListActivity : AppCompatActivity(),FragmentNeeds {
     private var _binding: ActivityListBinding? = null
@@ -86,9 +81,9 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
         }
     }
 
-    override fun startVideoListFragment(videoIds: LongArray) {
+    override fun startVideoListFragment(folderName: String) {
         val bundle = Bundle()
-        bundle.putLongArray(R.string.videoIdsKey.toString(), videoIds)
+        bundle.putString(R.string.folderNameKey.toString(), folderName)
         val fragment = VideoListFragment()
         fragment.arguments = bundle
         changeRecyclerViewFragment(fragment, true)
