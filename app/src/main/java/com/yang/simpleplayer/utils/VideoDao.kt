@@ -91,8 +91,19 @@ object VideoDao {
 
     fun requestVideos(context:Context, folderName:String, completed: (Result<List<Video>>)->Unit) {
         updateVideos(context) { result ->
-            result.onSuccess { videos->
+            result.onSuccess { videos ->
                 if(!videos[folderName].isNullOrEmpty()) completed(Result.success(videos[folderName]?.toList() as List<Video>))
+            }
+            result.onFailure { completed(Result.failure(it)) }
+        }
+    }
+
+    fun requestVideos(context:Context, videoIds:LongArray, completed: (Result<List<Video>>) -> Unit) {
+        updateVideos(context) { result ->
+            result.onSuccess { videos ->
+                val videoList = mutableListOf<Video>()
+                videos.values.forEach { videoList.addAll(it) }
+                Result.success(videoList.filter { videoIds.contains(it.id) })
             }
             result.onFailure { completed(Result.failure(it)) }
         }
