@@ -28,9 +28,9 @@ open class VideoRepository {
      * 폴더 요청
      */
     fun requestFolders(context: Context, completed: (Result<List<String>>) -> Unit) {
-        VideoDao.requestFolder(context) { result -> completed(result)}}
+        VideoDao.requestFolders(context) { result -> completed(result)}}
     fun updateFolders(context: Context, completed: (Result<List<String>>) -> Unit) {
         if(VideoDao.isSameVersion(context)) completed(Result.failure(Exception()))
-        VideoDao.requestFolder(context) { result -> completed(result)}
+        VideoDao.requestFolders(context) { result -> completed(result)}
     }
 }

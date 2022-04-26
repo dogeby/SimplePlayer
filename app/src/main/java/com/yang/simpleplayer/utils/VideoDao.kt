@@ -98,7 +98,7 @@ object VideoDao {
         }
     }
 
-    fun requestFolder(context:Context, completed: (Result<List<String>>) -> Unit) {
+    fun requestFolders(context:Context, completed: (Result<List<String>>) -> Unit) {
         updateVideos(context) { result ->
             result.onSuccess { videos->
                 completed(Result.success(videos.keys.toList()))
