@@ -40,6 +40,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
 
         binding.tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             val listener = {position:Int ->
+                clearBackStack()
                 when(position) {
                     0 -> changeRecyclerViewFragment(FolderListFragment(), false)
                     1 -> changeRecyclerViewFragment(RecentListFragment(), false)
@@ -49,7 +50,6 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
             override fun onTabSelected(tab: TabLayout.Tab?) { tab?.position?.let { listener(it) }}
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                clearBackStack()
                 tab?.position?.let { listener(it) }}
         })
     }
@@ -94,10 +94,10 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     override fun startVideoListFragment(folderName: String) {
-        val bundle = Bundle()
-        bundle.putString(getString(R.string.folderNameKey), folderName)
-        val fragment = VideoListFragment()
-        fragment.arguments = bundle
+        val bundle = Bundle().apply {
+            putString(getString(R.string.folderNameKey), folderName)
+        }
+        val fragment = VideoListFragment().apply { arguments = bundle }
         changeRecyclerViewFragment(fragment, true)
     }
 

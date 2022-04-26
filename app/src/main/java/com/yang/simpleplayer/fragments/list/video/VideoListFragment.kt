@@ -26,17 +26,13 @@ class VideoListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val videoRepo = VideoRepository()
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
-        try {
-            arguments?.let {
-                _source = it.getString(getString(R.string.folderNameKey))
+        arguments?.let {
+            _source = it.getString(getString(R.string.folderNameKey))
                 // TODO: id 받을시 코드 작성
-            }
-            _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo,
-                    (activity as FragmentNeeds).getApplication())).get(VideoListViewModel::class.java)
-            initUi()
-        } catch (e: Exception) {
-            (activity as FragmentNeeds).showToastMessage(e.toString())
         }
+        _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo,
+        (activity as FragmentNeeds).getApplication())).get(VideoListViewModel::class.java)
+        initUi()
         return binding.root
     }
 

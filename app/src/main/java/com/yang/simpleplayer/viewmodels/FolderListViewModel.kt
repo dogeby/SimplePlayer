@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.repositories.VideoRepository
 
 class FolderListViewModel(private val repository: VideoRepository, application: Application): AndroidViewModel(application) {
@@ -46,7 +45,7 @@ class FolderListViewModel(private val repository: VideoRepository, application: 
             if(modelClass.isAssignableFrom(FolderListViewModel::class.java)){
                 return FolderListViewModel(videoRepo, application) as T
             }
-            throw IllegalAccessException(R.string.unkown_viewmodel_class_exception.toString())
+            throw IllegalAccessException()
         }
     }
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.repositories.VideoRepository
 
@@ -47,7 +46,7 @@ class VideoListViewModel(private val repository: VideoRepository, application: A
             if(modelClass.isAssignableFrom(VideoListViewModel::class.java)) {
                 return VideoListViewModel(videoRepo, application) as T
             }
-            throw IllegalAccessException(R.string.unkown_viewmodel_class_exception.toString())
+            throw IllegalAccessException()
         }
     }
 }

@@ -24,14 +24,9 @@ class FolderListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val videoRepo = VideoRepository()
         _binding = FragmentFolderListBinding.inflate(layoutInflater)
-        try {
-            _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(videoRepo,
-                    (activity as FragmentNeeds).getApplication())).get(FolderListViewModel::class.java)
-            initUi()
-        } catch (e: Exception) {
-            (activity as FragmentNeeds).showToastMessage(e.toString())
-        }
-
+        _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(videoRepo,
+            (activity as FragmentNeeds).getApplication())).get(FolderListViewModel::class.java)
+        initUi()
         return binding.root
     }
 
