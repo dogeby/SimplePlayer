@@ -103,7 +103,7 @@ object VideoDao {
             result.onSuccess { videos ->
                 val videoList = mutableListOf<Video>()
                 videos.values.forEach { videoList.addAll(it) }
-                Result.success(videoList.filter { videoIds.contains(it.id) })
+                completed(Result.success(videoList.filter { videoIds.contains(it.id) }))
             }
             result.onFailure { completed(Result.failure(it)) }
         }

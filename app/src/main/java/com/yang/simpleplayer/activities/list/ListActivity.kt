@@ -1,5 +1,6 @@
 package com.yang.simpleplayer.activities.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.yang.simpleplayer.R
+import com.yang.simpleplayer.activities.PlayerActivity
 import com.yang.simpleplayer.databinding.ActivityListBinding
 import com.yang.simpleplayer.fragments.list.folder.FolderListFragment
 import com.yang.simpleplayer.fragments.list.playlist.PlaylistListFragment
@@ -18,16 +20,25 @@ import com.yang.simpleplayer.fragments.list.video.VideoListFragment
 class ListActivity : AppCompatActivity(),FragmentNeeds {
     private var _binding: ActivityListBinding? = null
     private val binding: ActivityListBinding get() = requireNotNull(_binding)
+    private var isDefault = true //ListActivity recreate시 FolderListFragment 중복 생성 문제 방지
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            isDefault = savedInstanceState.getBoolean(getString(R.string.isDefaultKey))
+        }
         _binding = ActivityListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUi()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(getString(R.string.isDefaultKey), isDefault)
+        super.onSaveInstanceState(outState)
+    }
+
     private fun initUi() {
-        supportFragmentManager.beginTransaction().add(binding.recyclerViewContainer.id, FolderListFragment()).commit()
+        if(isDefault) addDefaultListFragment()
         /**
          * 앱바 설정
          * SearchView name 검색기능, Settings Btn
@@ -56,6 +67,10 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
 
     private fun clearBackStack() {
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    private fun addDefaultListFragment() {
+        supportFragmentManager.beginTransaction().add(binding.recyclerViewContainer.id, FolderListFragment()).commit()
     }
 
     private fun changeRecyclerViewFragment(fragment: Fragment, isAddToBackStack:Boolean) {
@@ -99,6 +114,14 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
         }
         val fragment = VideoListFragment().apply { arguments = bundle }
         changeRecyclerViewFragment(fragment, true)
+    }
+
+    override fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray) {
+        isDefault = false
+        Intent(this, PlayerActivity::class.java).apply {
+            putExtra(getString(R.string.videoIdsKey), videoIds)
+            putExtra(getString(R.string.videoIdKey), currentVideoId)
+        }. run { startActivity(this) }
     }
 
     override fun setAppbarTitleText(title: String) { binding.appbarTitle.text = title }

@@ -15,7 +15,7 @@ class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(
 
     private val videos = mutableListOf<Video>()
     private val filteredVideos = mutableListOf<Video>()
-    var itemViewOnclick: (Video) -> Unit = {}
+    var itemViewOnclick = {currentVideoId:Long, videoIds:LongArray -> Unit}
     var moreBtnOnClick: (Video) -> Unit = {}
 
     fun updateVideos(videos: List<Video>) {
@@ -77,7 +77,11 @@ class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(
             name.text = Format.splitExtension(video.name)
             ImageLoader.loadThumbnail(video.contentUri, thumbnail)
             duration.text = Format.msToHourMinSecond(video.duration)
-            itemView.setOnClickListener { itemViewOnclick(video) }
+            itemView.setOnClickListener {
+                val ids = mutableListOf<Long>()
+                videos.forEach { ids.add(it.id) }
+                itemViewOnclick(video.id, ids.toLongArray())
+            }
             moreBtn.setOnClickListener { moreBtnOnClick(video) }
         }
     }

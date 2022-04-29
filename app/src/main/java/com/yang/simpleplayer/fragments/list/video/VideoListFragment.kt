@@ -38,7 +38,7 @@ class VideoListFragment : Fragment() {
 
     private fun initUi() {
         val adapter = VideoListAdapter().apply {
-            // TODO: 비디오재생 코드 작성
+            itemViewOnclick = (activity as FragmentNeeds)::startPlayerActivity
             // TODO: morebtn 동작 코드 작성
         }
         binding.videoList.adapter = adapter

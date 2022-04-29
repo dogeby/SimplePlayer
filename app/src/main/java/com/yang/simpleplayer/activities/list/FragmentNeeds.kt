@@ -9,6 +9,7 @@ interface FragmentNeeds {
     fun setProgressBar(visible:Boolean)
     fun setRefreshListener(update:(()->Unit))
     fun startVideoListFragment(folderName: String)
+    fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray)
     fun setAppbarTitleText(title:String)
     fun setOnQueryTextListener(listener: SearchView.OnQueryTextListener)
 }

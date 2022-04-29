@@ -10,7 +10,7 @@ open class VideoRepository {
      * 특정 비디오 요청
      */
     fun requestVideos(context: Context, source:Any, completed: (Result<List<Video>>)->Unit) {
-        if(source is String) VideoDao.requestVideos(context, source){ result -> completed(result) }
+        if(source is String) VideoDao.requestVideos(context, source) { result -> completed(result) }
         if(source is LongArray) VideoDao.requestVideos(context, source) { result -> completed(result) }
     }
 

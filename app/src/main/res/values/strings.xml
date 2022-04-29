@@ -6,9 +6,10 @@
 
     <!-- Bundle Key-->
     <string name="folderNameKey">folderName</string>
-
+    <string name="videoIdsKey">videoIds</string>
+    <string name="videoIdKey">videoId</string>
+    <string name="isDefaultKey">isDefault</string>
     <!-- Exception Message-->
     <string name="empty_video_exception">비디오를 찾을수 없습니다</string>
     <string name="fail_load_video_exception">비디오를 불러오는데 실패했습니다</string>
-    <string name="unkown_viewmodel_class_exception">Unkown Viewmodel Class</string>
 </resources>
