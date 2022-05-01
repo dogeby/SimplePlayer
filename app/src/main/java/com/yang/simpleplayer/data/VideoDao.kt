@@ -1,4 +1,4 @@
-package com.yang.simpleplayer.utils
+package com.yang.simpleplayer.data
 
 import android.content.ContentUris
 import android.content.Context
@@ -69,7 +69,9 @@ object VideoDao {
                             id
                         )
                         val relativePath = cursor.getString(relativePathColumn)
-                        if (!tmpVideos.containsKey(relativePath)) tmpVideos[relativePath] = TreeSet(videoNameComparator)
+                        if (!tmpVideos.containsKey(relativePath)) tmpVideos[relativePath] = TreeSet(
+                            videoNameComparator
+                        )
                         tmpVideos[relativePath]?.add(Video(id, contentUri, name, duration, relativePath))
                     }
                 }
@@ -119,7 +121,7 @@ object VideoDao {
     }
 
     fun isSameVersion(context:Context):Boolean {
-        if(!::version.isInitialized) { return false }
+        if(!VideoDao::version.isInitialized) { return false }
         return version ==  MediaStore.getVersion(context)
     }
 

@@ -2,7 +2,7 @@ package com.yang.simpleplayer.repositories
 
 import android.content.Context
 import com.yang.simpleplayer.models.Video
-import com.yang.simpleplayer.utils.VideoDao
+import com.yang.simpleplayer.data.VideoDao
 
 class VideoRepository {
 
