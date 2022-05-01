@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.repositories.VideoRepository
@@ -22,12 +21,13 @@ class VideoListFragment : Fragment() {
     private val viewModel: VideoListViewModel get() = requireNotNull(_viewModel)
     private var _source: Any? = null
     private val source: Any get() = requireNotNull(_source)
+    private val FOLDER_NAME_KEY = "folderName"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val videoRepo = VideoRepository()
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
         arguments?.let {
-            _source = it.getString(getString(R.string.folderNameKey))
+            _source = it.getString(FOLDER_NAME_KEY)
                 // TODO: id 받을시 코드 작성
         }
         _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo,

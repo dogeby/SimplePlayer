@@ -9,7 +9,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.PlayerActivity
 import com.yang.simpleplayer.databinding.ActivityListBinding
 import com.yang.simpleplayer.fragments.list.folder.FolderListFragment
@@ -21,11 +20,15 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     private var _binding: ActivityListBinding? = null
     private val binding: ActivityListBinding get() = requireNotNull(_binding)
     private var isDefault = true //ListActivity recreate시 FolderListFragment 중복 생성 문제 방지
+    private val FOLDER_NAME_KEY = "folderName"
+    private val VIDEO_IDS_KEY = "videoIds"
+    private val VIDEO_ID_KEY = "videoId"
+    private val IS_DEFAULT_KEY = "isDefaultKey"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
-            isDefault = savedInstanceState.getBoolean(getString(R.string.isDefaultKey))
+            isDefault = savedInstanceState.getBoolean(IS_DEFAULT_KEY)
         }
         _binding = ActivityListBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -33,7 +36,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(getString(R.string.isDefaultKey), isDefault)
+        outState.putBoolean(IS_DEFAULT_KEY, isDefault)
         super.onSaveInstanceState(outState)
     }
 
@@ -110,7 +113,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
 
     override fun startVideoListFragment(folderName: String) {
         val bundle = Bundle().apply {
-            putString(getString(R.string.folderNameKey), folderName)
+            putString(FOLDER_NAME_KEY, folderName)
         }
         val fragment = VideoListFragment().apply { arguments = bundle }
         changeRecyclerViewFragment(fragment, true)
@@ -119,8 +122,8 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     override fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray) {
         isDefault = false
         Intent(this, PlayerActivity::class.java).apply {
-            putExtra(getString(R.string.videoIdsKey), videoIds)
-            putExtra(getString(R.string.videoIdKey), currentVideoId)
+            putExtra(VIDEO_IDS_KEY, videoIds)
+            putExtra(VIDEO_ID_KEY, currentVideoId)
         }. run { startActivity(this) }
     }
 

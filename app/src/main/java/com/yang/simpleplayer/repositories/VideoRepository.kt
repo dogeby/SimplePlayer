@@ -4,7 +4,7 @@ import android.content.Context
 import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.utils.VideoDao
 
-open class VideoRepository {
+class VideoRepository {
 
     /**
      * 특정 비디오 요청

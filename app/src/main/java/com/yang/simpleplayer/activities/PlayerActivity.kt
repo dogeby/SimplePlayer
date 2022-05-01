@@ -8,7 +8,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ActivityPlayerBinding
 import com.yang.simpleplayer.repositories.VideoRepository
 import com.yang.simpleplayer.utils.Player
@@ -22,6 +21,8 @@ class PlayerActivity : AppCompatActivity() {
     private val viewModel: PlayerViewModel get() = requireNotNull(_viewModel)
     private var _player: Player? = null
     private val player: Player get() = requireNotNull(_player)
+    private val VIDEO_IDS_KEY = "videoIds"
+    private val VIDEO_ID_KEY = "videoId"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +49,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initUi() {
-        val videoIds = intent.getLongArrayExtra(getString(R.string.videoIdsKey))
-        val currentVideoId = intent.getLongExtra(getString(R.string.videoIdKey), 0L)
+        val videoIds = intent.getLongArrayExtra(VIDEO_IDS_KEY)
+        val currentVideoId = intent.getLongExtra(VIDEO_ID_KEY, 0L)
         viewModel.player.observe(this) { player ->
             _player = player
             this.player.attachStyledPlayerView(binding.playerView)
