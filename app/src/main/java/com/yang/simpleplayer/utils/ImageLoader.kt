@@ -16,33 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 object ImageLoader {
-    private val imageCache = mutableMapOf<String, Bitmap>()
-    private val thumbnailSize = Size(640,480)
-    fun loadThumbnail(context: Context, video: Video, completed:(Bitmap?)->Unit) {
-        if(imageCache.containsKey(video.contentUri.toString())) {
-            completed(imageCache[video.contentUri.toString()])
-            return
-        }
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val thumbnail = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    context.contentResolver.loadThumbnail(video.contentUri, thumbnailSize, null)
-                } else {
-                    MediaStore.Video.Thumbnails.getThumbnail(
-                        context.contentResolver, video.id, MediaStore.Video.Thumbnails.MINI_KIND, BitmapFactory.Options() //MINI_KIND: 512 x 384
-                    )
-                }
-                imageCache[video.contentUri.toString()] = thumbnail
-                withContext(Dispatchers.Main) {
-                    completed(thumbnail)
-                }
-            } catch (e:Exception) {
-                withContext(Dispatchers.Main) {
-                    completed(null)
-                }
-            }
-        }
-    }
     fun loadThumbnail(uri: Uri, imageView: ImageView) {
         Glide.with(imageView.context).asBitmap().load(uri).into(imageView)
     }

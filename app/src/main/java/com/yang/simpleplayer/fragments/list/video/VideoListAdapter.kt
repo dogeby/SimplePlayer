@@ -15,7 +15,7 @@ class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(
 
     private val videos = mutableListOf<Video>()
     private val filteredVideos = mutableListOf<Video>()
-    var itemViewOnclick = {currentVideoId:Long, videoIds:LongArray -> Unit}
+    var itemViewOnclick = {_:Long, _:LongArray -> Unit}
     var moreBtnOnClick: (Video) -> Unit = {}
 
     fun updateVideos(videos: List<Video>) {

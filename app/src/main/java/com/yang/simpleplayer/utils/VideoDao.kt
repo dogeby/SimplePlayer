@@ -32,8 +32,8 @@ object VideoDao {
         MediaStore.Video.Media.RELATIVE_PATH
     )
     private const val MEDIASTORE_NAME_ASC = "${MediaStore.Video.Media.DISPLAY_NAME} ASC"
-    private val VIDEO_NAME_COMPARABLE_ASC:Comparator<Video> = compareBy { it?.name?.lowercase() }
-    private val VIDEO_NAME_COMPARABLE_DESC:Comparator<Video> = compareByDescending { it?.name?.lowercase() }
+    private val VIDEO_NAME_COMPARABLE_ASC:Comparator<Video> = compareBy { it.name.lowercase() }
+    private val VIDEO_NAME_COMPARABLE_DESC:Comparator<Video> = compareByDescending { it.name.lowercase() }
     private var videoNameComparator:Comparator<Video> = VIDEO_NAME_COMPARABLE_ASC
 
 

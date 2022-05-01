@@ -106,7 +106,6 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
 
     override fun setRefreshListener(update: () -> Unit) {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            update
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }
