@@ -14,13 +14,11 @@ import com.yang.simpleplayer.activities.list.ListActivity
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
-        setContentView(R.layout.activity_main)
-
+        super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition{true}
         showVideoFileList()
-        finish()
+        setContentView(R.layout.activity_main)
     }
 
     private val requestPermissionLauncher =
