@@ -36,8 +36,8 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(isDefaultKey, isDefault)
         super.onSaveInstanceState(outState)
+        outState.putBoolean(isDefaultKey, isDefault)
     }
 
     private fun initUi() {

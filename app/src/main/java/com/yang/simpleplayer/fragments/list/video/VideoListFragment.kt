@@ -69,8 +69,8 @@ class VideoListFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
         _viewModel = null
+        super.onDestroyView()
     }
 }
