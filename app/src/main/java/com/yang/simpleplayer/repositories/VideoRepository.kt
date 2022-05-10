@@ -1,36 +1,67 @@
 package com.yang.simpleplayer.repositories
 
-import android.content.Context
-import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.data.VideoDao
+import com.yang.simpleplayer.data.VideoInfoDbDao
+import com.yang.simpleplayer.models.Video
+import com.yang.simpleplayer.models.VideoInfo
+import java.util.*
 
-class VideoRepository {
+class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao: VideoInfoDbDao) {
 
     /**
-     * 특정 비디오 요청
+     * 비디오 요청
      */
-    fun requestVideos(context: Context, source:Any, completed: (Result<List<Video>>)->Unit) {
-        if(source is String) VideoDao.requestVideos(context, source) { result -> completed(result) }
-        if(source is LongArray) VideoDao.requestVideos(context, source) { result -> completed(result) }
+    suspend fun getVideos(folderName:String):List<Video> {
+        return videoDao.getVideos().filter { video -> video.relativePath == folderName }
     }
 
-    fun updateVideos(context: Context, source:Any, completed: (Result<List<Video>>) -> Unit) {
-        if(VideoDao.isSameVersion(context)){
-            completed(Result.failure(Exception()))
-        } else {
-            if(source is String) {
-                requestVideos(context, source) { result -> completed(result) }
+    suspend fun getVideos(ids:LongArray):List<Video> {
+        return videoDao.getVideos().filter { video -> ids.contains(video.id) }
+    }
+
+    fun getVideoInfo(id:Long) = videoInfoDbDao.getVideoInfo(id)
+
+    fun getVideosInfo(ids: LongArray) = videoInfoDbDao.getVideosInfo(ids)
+
+    fun getAllVideoInfo() = videoInfoDbDao.getAllVideoInfo()
+
+    fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
+
+    /**
+     * 폴더 이름 요청
+     */
+    suspend fun getFolderNames():List<String> {
+        val folderNames = TreeSet<String>()
+        videoDao.getVideos().forEach { video ->
+            folderNames.add(video.relativePath)
+        }
+        return folderNames.toList()
+    }
+
+    /**
+     * 비디오 정보 DB
+     */
+    suspend fun insertOrReplace(videoInfo:VideoInfo) {
+        videoInfoDbDao.insertOrReplace(videoInfo)
+    }
+
+    suspend fun update(videoInfo:VideoInfo) {
+        videoInfoDbDao.update(videoInfo)
+    }
+
+    suspend fun delete(videoInfo:VideoInfo) {
+        videoInfoDbDao.delete(videoInfo)
+    }
+
+    suspend fun checkInvalidVideoInfo() {
+        val videosInfo = getAllVideoInfo()
+        val videos = videoDao.getVideos()
+        val videoHashSet = HashSet<Long>()
+        videos.forEach { videoHashSet.add(it.id) }
+        videosInfo.forEach { videoInfo ->
+            if(!videoHashSet.contains(videoInfo.id)) {
+                delete(videoInfo)
             }
         }
-    }
-
-    /**
-     * 폴더 요청
-     */
-    fun requestFolders(context: Context, completed: (Result<List<String>>) -> Unit) {
-        VideoDao.requestFolders(context) { result -> completed(result)}}
-    fun updateFolders(context: Context, completed: (Result<List<String>>) -> Unit) {
-        if(VideoDao.isSameVersion(context)) completed(Result.failure(Exception()))
-        VideoDao.requestFolders(context) { result -> completed(result)}
     }
 }

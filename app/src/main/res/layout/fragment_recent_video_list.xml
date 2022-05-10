@@ -4,14 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.list.recent.RecentListFragment">
+    tools:context=".fragments.list.recent.RecentVideoListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recentList"
+        android:id="@+id/recentVideoList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="3"
-        tools:listitem="@layout/view_recent_item" />
+        tools:listitem="@layout/view_recent_video_item" />
 </FrameLayout>

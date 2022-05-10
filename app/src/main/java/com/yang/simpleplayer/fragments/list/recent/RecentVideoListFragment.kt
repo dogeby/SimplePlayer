@@ -1,4 +1,4 @@
-package com.yang.simpleplayer.fragments.list.video
+package com.yang.simpleplayer.fragments.list.recent
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,29 +7,32 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
-import com.yang.simpleplayer.utils.Format
-import com.yang.simpleplayer.viewmodels.VideoListViewModel
+import com.yang.simpleplayer.fragments.list.video.VideoListAdapter
+import com.yang.simpleplayer.viewmodels.RecentListViewModel
 
-class VideoListFragment : Fragment() {
+/**
+ * 임시로 videoAdapter, videoListBinding사용
+ */
+// TODO: 날짜 넣을수있는 어뎁터 작성 필요
+// TODO: 최근 비디오 비어있으면 비었다는 뷰 띄우기
+class RecentVideoListFragment : Fragment() {
 
     private var _binding: FragmentVideoListBinding? = null
     private val binding: FragmentVideoListBinding get() = requireNotNull(_binding)
-    private var _viewModel: VideoListViewModel? = null
-    private val viewModel: VideoListViewModel get() = requireNotNull(_viewModel)
-    private var _source: Any? = null
-    private val source: Any get() = requireNotNull(_source)
-    private val folderNameKey = "folderName"
-    private val videoIdsKey = "videoIds"
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val videoRepo = (activity?.application as SimplePlayerApplication).appContainer.videoRepository
+    private var _viewModel: RecentListViewModel? = null
+    private val viewModel: RecentListViewModel get() = requireNotNull(_viewModel)
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val videoRepo = ( activity?.application as SimplePlayerApplication).appContainer.videoRepository
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
-        arguments?.let {
-            _source = it.getString(folderNameKey)?:it.getLongArray(videoIdsKey)
-        }
-        _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo)).get(VideoListViewModel::class.java)
+        _viewModel = ViewModelProvider(this, RecentListViewModel.RecentListViewModelFactory(videoRepo)).get(RecentListViewModel::class.java)
         initUi()
         return binding.root
     }
@@ -37,7 +40,7 @@ class VideoListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // TODO: RecyclerView 최적화 필요
-        viewModel.list(source)
+        viewModel.list()
     }
 
     private fun initUi() {
@@ -56,16 +59,16 @@ class VideoListFragment : Fragment() {
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
             (activity as FragmentNeeds).showToastMessage(getString(exceptionMessageResId.toInt()))
         }
-        (activity as FragmentNeeds).setRefreshListener { viewModel.list(source) }
-        (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
+        (activity as FragmentNeeds).setRefreshListener { viewModel.list() }
+        (activity as FragmentNeeds).setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean { return false }
             override fun onQueryTextChange(newText: String?): Boolean {
                 adapter.filter.filter(newText)
                 return false
             }
         })
-        (activity as FragmentNeeds).setAppbarTitleText(Format.getParentFolderName(source.toString()))
-        viewModel.list(source)
+        (activity as FragmentNeeds).setAppbarTitleText(getString(R.string.appbar_title_recent))
+        viewModel.list()
     }
 
     override fun onDestroyView() {

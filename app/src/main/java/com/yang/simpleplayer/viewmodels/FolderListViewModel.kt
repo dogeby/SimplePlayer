@@ -1,13 +1,14 @@
 package com.yang.simpleplayer.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.yang.simpleplayer.repositories.VideoRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class FolderListViewModel(private val repository: VideoRepository, application: Application): AndroidViewModel(application) {
+class FolderListViewModel(private val repository: VideoRepository):ViewModel() {
 
     val progressVisible = MutableLiveData<Boolean>()
     val folderNames = MutableLiveData<List<String>>()
@@ -15,35 +16,17 @@ class FolderListViewModel(private val repository: VideoRepository, application: 
 
     fun list() {
         progressVisible.postValue(true)
-        repository.requestFolders(getApplication()){ result ->
-            result.onSuccess { folderNames ->
-                this.folderNames.postValue(folderNames)
-            }
-            result.onFailure {
-                exceptionMessageResId.postValue(it.message)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            folderNames.postValue(repository.getFolderNames())
             progressVisible.postValue(false)
         }
     }
 
-    fun update() {
-        progressVisible.postValue(true)
-        repository.updateFolders(getApplication()){ result ->
-            result.onSuccess { folderNames ->
-                this.folderNames.postValue(folderNames)
-            }
-            result.onFailure {
-                if(!it.message.isNullOrBlank()) exceptionMessageResId.postValue(it.message)
-            }
-            progressVisible.postValue(false)
-        }
-    }
-
-    class FolderListViewModelFactory(private val videoRepo:VideoRepository, private val application: Application):
+    class FolderListViewModelFactory(private val videoRepo:VideoRepository):
             ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(FolderListViewModel::class.java)){
-                return FolderListViewModel(videoRepo, application) as T
+                return FolderListViewModel(videoRepo) as T
             }
             throw IllegalAccessException()
         }

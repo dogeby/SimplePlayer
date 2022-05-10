@@ -27,6 +27,7 @@ class PlayerView(context:Context, attrs: AttributeSet? = null): StyledPlayerView
             return false
         }
     })
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         gestureDetector.onTouchEvent(event)
         return true

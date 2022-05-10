@@ -73,6 +73,7 @@ class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(
         private val duration = binding.duration
         private val moreBtn = binding.moreBtn
 
+        // TODO: itemView setOnClickListener bind에서 빼서 구현
         fun bind(video: Video) {
             name.text = Format.splitExtension(video.name)
             ImageLoader.loadThumbnail(video.contentUri, thumbnail)

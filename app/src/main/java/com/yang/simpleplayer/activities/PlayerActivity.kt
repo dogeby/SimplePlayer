@@ -8,8 +8,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.databinding.ActivityPlayerBinding
-import com.yang.simpleplayer.repositories.VideoRepository
+import com.yang.simpleplayer.models.VideoInfo
 import com.yang.simpleplayer.utils.Player
 import com.yang.simpleplayer.viewmodels.PlayerViewModel
 
@@ -21,15 +22,15 @@ class PlayerActivity : AppCompatActivity() {
     private val viewModel: PlayerViewModel get() = requireNotNull(_viewModel)
     private var _player: Player? = null
     private val player: Player get() = requireNotNull(_player)
-    private val VIDEO_IDS_KEY = "videoIds"
-    private val VIDEO_ID_KEY = "videoId"
+    private val videoIdsKey = "videoIds"
+    private val videoIdKey = "videoId"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val videoRepo = VideoRepository()
+        val videoRepo = (application as SimplePlayerApplication).appContainer.videoRepository
+        _player = Player.Factory().build(this)
         _binding = ActivityPlayerBinding.inflate(layoutInflater)
-        _viewModel = ViewModelProvider(this, PlayerViewModel.PlayerViewModelFactory(videoRepo,
-            application)).get(PlayerViewModel::class.java)
+        _viewModel = ViewModelProvider(this, PlayerViewModel.PlayerViewModelFactory(videoRepo, player)).get(PlayerViewModel::class.java)
         hideSystemBars()
         initUi()
         setContentView(binding.root)
@@ -49,20 +50,24 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initUi() {
-        val videoIds = intent.getLongArrayExtra(VIDEO_IDS_KEY)
-        val currentVideoId = intent.getLongExtra(VIDEO_ID_KEY, 0L)
-        viewModel.player.observe(this) { player ->
-            _player = player
-            this.player.attachStyledPlayerView(binding.playerView)
-            this.player.prepare()
-            this.player.play()
-        }
+        val videoIds = intent.getLongArrayExtra(videoIdsKey)
+        val currentVideoId = intent.getLongExtra(videoIdKey, 0L)
         viewModel.progressVisible.observe(this) { progressVisible ->
             setProgressBar(progressVisible)
         }
         viewModel.exceptionMessageResId.observe(this) { exceptionMessageResId ->
             showToastMessage(getString(exceptionMessageResId.toInt()))
         }
+        viewModel.isSetVideo.observe(this) {
+            this.player.attachStyledPlayerView(binding.playerView)
+            this.player.prepare()
+            this.player.play()
+        }
+
+        player.setMediaIndexTransitionCallback { videoInfo: VideoInfo ->
+            viewModel.insertOrReplaceVideoInfo(videoInfo)
+        }
+
         viewModel.requestPlayer(currentVideoId, requireNotNull(videoIds))
     }
 

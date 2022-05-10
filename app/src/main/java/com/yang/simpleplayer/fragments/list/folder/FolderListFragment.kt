@@ -8,9 +8,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
+import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentFolderListBinding
-import com.yang.simpleplayer.repositories.VideoRepository
 import com.yang.simpleplayer.viewmodels.FolderListViewModel
 
 class FolderListFragment : Fragment() {
@@ -22,10 +22,9 @@ class FolderListFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val videoRepo = VideoRepository()
+        val videoRepo = ( activity?.application as SimplePlayerApplication).appContainer.videoRepository
         _binding = FragmentFolderListBinding.inflate(layoutInflater)
-        _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(videoRepo,
-            (activity as FragmentNeeds).getApplication())).get(FolderListViewModel::class.java)
+        _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(videoRepo)).get(FolderListViewModel::class.java)
         initUi()
         return binding.root
     }
@@ -46,7 +45,7 @@ class FolderListFragment : Fragment() {
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
             (activity as FragmentNeeds).showToastMessage(getString(exceptionMessageResId.toInt()))
         }
-        (activity as FragmentNeeds).setRefreshListener { viewModel.update() }
+        (activity as FragmentNeeds).setRefreshListener { viewModel.list() }
         (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean { return false }
             override fun onQueryTextChange(newText: String?): Boolean {

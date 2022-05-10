@@ -7,7 +7,7 @@ interface FragmentNeeds {
     fun getApplication(): Application
     fun showToastMessage(msg: String)
     fun setProgressBar(visible:Boolean)
-    fun setRefreshListener(update:(()->Unit))
+    fun setRefreshListener(update:()->Unit)
     fun startVideoListFragment(folderName: String)
     fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray)
     fun setAppbarTitleText(title:String)

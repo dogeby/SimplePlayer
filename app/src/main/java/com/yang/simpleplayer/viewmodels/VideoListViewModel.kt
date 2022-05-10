@@ -1,12 +1,13 @@
 package com.yang.simpleplayer.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.repositories.VideoRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * VideoListFragment의 ViewModel
@@ -14,37 +15,32 @@ import com.yang.simpleplayer.repositories.VideoRepository
  * videoIds에 해당하는 비디오들을 post한다
  */
 
-class VideoListViewModel(private val repository: VideoRepository, application: Application): AndroidViewModel(application) {
-
+class VideoListViewModel(private val repository: VideoRepository):ViewModel() {
     val progressVisible = MutableLiveData<Boolean>()
     val videos = MutableLiveData<List<Video>>()
     val exceptionMessageResId = MutableLiveData<String>()
 
     fun list(source:Any) {
         progressVisible.postValue(true)
-        repository.requestVideos(getApplication(), source) { requestVideosResult ->
-            requestVideosResult.onSuccess { videos.postValue(it) }
-            requestVideosResult.onFailure { exceptionMessageResId.postValue(it.message) }
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val videoList = if(source is String) repository.getVideos(source)
+                else repository.getVideos(source as LongArray)
+            videoList.forEach { video ->
+                repository.getVideoInfo(video.id)?.let {
+                    video.videoInfo = it
+                }
+            }
+            videos.postValue(videoList)
             progressVisible.postValue(false)
         }
     }
 
-    fun update(source: Any) {
-        repository.updateVideos(getApplication(), source) {
-            progressVisible.postValue(true)
-            repository.updateVideos(getApplication(), source){ result ->
-                result.onSuccess { videos.postValue(it) }
-                result.onFailure { if(!it.message.isNullOrBlank()) exceptionMessageResId.postValue(it.message) }
-                progressVisible.postValue(false)
-            }
-        }
-    }
-
-    class VideoListViewModelFactory(private val videoRepo:VideoRepository, private val application: Application):
+    class VideoListViewModelFactory(private val videoRepo:VideoRepository):
             ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(VideoListViewModel::class.java)) {
-                return VideoListViewModel(videoRepo, application) as T
+                return VideoListViewModel(videoRepo) as T
             }
             throw IllegalAccessException()
         }

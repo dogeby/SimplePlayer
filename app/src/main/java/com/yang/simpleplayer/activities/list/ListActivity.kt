@@ -13,22 +13,22 @@ import com.yang.simpleplayer.activities.PlayerActivity
 import com.yang.simpleplayer.databinding.ActivityListBinding
 import com.yang.simpleplayer.fragments.list.folder.FolderListFragment
 import com.yang.simpleplayer.fragments.list.playlist.PlaylistListFragment
-import com.yang.simpleplayer.fragments.list.recent.RecentListFragment
+import com.yang.simpleplayer.fragments.list.recent.RecentVideoListFragment
 import com.yang.simpleplayer.fragments.list.video.VideoListFragment
 
 class ListActivity : AppCompatActivity(),FragmentNeeds {
     private var _binding: ActivityListBinding? = null
     private val binding: ActivityListBinding get() = requireNotNull(_binding)
     private var isDefault = true //ListActivity recreate시 FolderListFragment 중복 생성 문제 방지
-    private val FOLDER_NAME_KEY = "folderName"
-    private val VIDEO_IDS_KEY = "videoIds"
-    private val VIDEO_ID_KEY = "videoId"
-    private val IS_DEFAULT_KEY = "isDefaultKey"
+    private val folderNameKey = "folderName"
+    private val videoIdsKey = "videoIds"
+    private val videoIdKey = "videoId"
+    private val isDefaultKey = "isDefaultKey"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
-            isDefault = savedInstanceState.getBoolean(IS_DEFAULT_KEY)
+            isDefault = savedInstanceState.getBoolean(isDefaultKey)
         }
         _binding = ActivityListBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -36,7 +36,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(IS_DEFAULT_KEY, isDefault)
+        outState.putBoolean(isDefaultKey, isDefault)
         super.onSaveInstanceState(outState)
     }
 
@@ -57,7 +57,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
                 clearBackStack()
                 when(position) {
                     0 -> changeRecyclerViewFragment(FolderListFragment(), false)
-                    1 -> changeRecyclerViewFragment(RecentListFragment(), false)
+                    1 -> changeRecyclerViewFragment(RecentVideoListFragment(), false)
                     2 -> changeRecyclerViewFragment(PlaylistListFragment(), false)
                 }
             }
@@ -106,13 +106,14 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
 
     override fun setRefreshListener(update: () -> Unit) {
         binding.swipeRefreshLayout.setOnRefreshListener {
+            update()
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }
 
     override fun startVideoListFragment(folderName: String) {
         val bundle = Bundle().apply {
-            putString(FOLDER_NAME_KEY, folderName)
+            putString(folderNameKey, folderName)
         }
         val fragment = VideoListFragment().apply { arguments = bundle }
         changeRecyclerViewFragment(fragment, true)
@@ -121,8 +122,8 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     override fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray) {
         isDefault = false
         Intent(this, PlayerActivity::class.java).apply {
-            putExtra(VIDEO_IDS_KEY, videoIds)
-            putExtra(VIDEO_ID_KEY, currentVideoId)
+            putExtra(videoIdsKey, videoIds)
+            putExtra(videoIdKey, currentVideoId)
         }. run { startActivity(this) }
     }
 
