@@ -1,4 +1,5 @@
 # SimplePlayer
+70%완료
 수정중
 
 
