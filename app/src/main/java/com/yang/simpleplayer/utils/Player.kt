@@ -18,6 +18,29 @@ import java.util.*
 class Player(private val player:ExoPlayer) {
     private lateinit var videos:List<Video>
     private var currentVideoIndex = 0
+    var eventMediaItemTransitionCallback:(videoInfo:VideoInfo)->Unit = {}
+    var eventVideoSizeChangedCallback:(width:Int, height:Int)->Unit = { _, _ ->  }
+
+    init {
+        player.addListener(object: com.google.android.exoplayer2.Player.Listener {
+            override fun onEvents(
+                player: com.google.android.exoplayer2.Player,
+                events: com.google.android.exoplayer2.Player.Events
+            ) {
+                when {
+                    events.contains(com.google.android.exoplayer2.Player.EVENT_VIDEO_SIZE_CHANGED) -> {
+                        eventVideoSizeChangedCallback(player.videoSize.width, player.videoSize.height)
+                    }
+                    events.contains(com.google.android.exoplayer2.Player.EVENT_MEDIA_ITEM_TRANSITION) -> {
+                        val currentVideoInfo = videos[currentVideoIndex].videoInfo
+                        currentVideoInfo.playbackDate = Date(System.currentTimeMillis())
+                        eventMediaItemTransitionCallback(currentVideoInfo)
+                        currentVideoIndex = player.currentMediaItemIndex
+                    }
+                }
+            }
+        })
+    }
 
     private fun addMediaItem(mediaItem: MediaItem) {
         player.addMediaItem(mediaItem)
@@ -34,22 +57,6 @@ class Player(private val player:ExoPlayer) {
     }
     fun attachStyledPlayerView(view: StyledPlayerView) {
         view.player = player
-    }
-
-    fun setMediaIndexTransitionCallback(callback:(videoInfo: VideoInfo) -> Unit) {
-        player.addListener(object: com.google.android.exoplayer2.Player.Listener {
-            override fun onEvents(
-                player: com.google.android.exoplayer2.Player,
-                events: com.google.android.exoplayer2.Player.Events
-            ) {
-                if(events.contains(com.google.android.exoplayer2.Player.EVENT_MEDIA_ITEM_TRANSITION)){
-                    val currentVideoInfo = videos[currentVideoIndex].videoInfo
-                    currentVideoInfo.playbackDate = Date(System.currentTimeMillis())
-                    callback(currentVideoInfo)
-                    currentVideoIndex = player.currentMediaItemIndex
-                }
-            }
-        })
     }
 
     fun prepare() {player.prepare()}

@@ -10,6 +10,7 @@
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black"
         app:auto_show="false"/>
     <ProgressBar
         android:id="@+id/progressBar"

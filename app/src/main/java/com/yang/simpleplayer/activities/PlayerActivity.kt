@@ -1,5 +1,6 @@
 package com.yang.simpleplayer.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -64,8 +65,10 @@ class PlayerActivity : AppCompatActivity() {
             this.player.play()
         }
 
-        player.setMediaIndexTransitionCallback { videoInfo: VideoInfo ->
-            viewModel.insertOrReplaceVideoInfo(videoInfo)
+        player.eventMediaItemTransitionCallback = { videoInfo: VideoInfo -> viewModel.insertOrReplaceVideoInfo(videoInfo) }
+        player.eventVideoSizeChangedCallback = { width, height ->
+            requestedOrientation = if(width > height) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         viewModel.requestPlayer(currentVideoId, requireNotNull(videoIds))
