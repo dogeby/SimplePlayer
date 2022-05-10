@@ -17,7 +17,6 @@ import java.util.*
 
 class Player(private val player:ExoPlayer) {
     private lateinit var videos:List<Video>
-    private var currentVideoIndex = 0
     var eventMediaItemTransitionCallback:(videoInfo:VideoInfo)->Unit = {}
     var eventVideoSizeChangedCallback:(width:Int, height:Int)->Unit = { _, _ ->  }
 
@@ -32,10 +31,9 @@ class Player(private val player:ExoPlayer) {
                         eventVideoSizeChangedCallback(player.videoSize.width, player.videoSize.height)
                     }
                     events.contains(com.google.android.exoplayer2.Player.EVENT_MEDIA_ITEM_TRANSITION) -> {
-                        val currentVideoInfo = videos[currentVideoIndex].videoInfo
-                        currentVideoInfo.playbackDate = Date(System.currentTimeMillis())
-                        eventMediaItemTransitionCallback(currentVideoInfo)
-                        currentVideoIndex = player.currentMediaItemIndex
+                        eventMediaItemTransitionCallback(videos[player.currentMediaItemIndex].videoInfo.apply {
+                            this.playbackDate = Date(System.currentTimeMillis())
+                        })
                     }
                 }
             }
@@ -47,14 +45,15 @@ class Player(private val player:ExoPlayer) {
     }
     private fun createMediaItem(uri: Uri) = MediaItem.fromUri(uri)
 
-    fun setMediaItems(videos:List<Video>) {
+    fun setMediaItems(videos:List<Video>, currentVideoIndex:Int) {
         this.videos = videos
+        eventMediaItemTransitionCallback(videos[currentVideoIndex].videoInfo.apply {
+            this.playbackDate = Date(System.currentTimeMillis())
+        })
         videos.forEach {addMediaItem(createMediaItem(it.contentUri))}
+        player.seekTo(currentVideoIndex, player.bufferedPosition)
     }
-    fun setCurrentVideo(index:Int) {
-        currentVideoIndex = index
-        player.seekTo(index, player.bufferedPosition)
-    }
+
     fun attachStyledPlayerView(view: StyledPlayerView) {
         view.player = player
     }

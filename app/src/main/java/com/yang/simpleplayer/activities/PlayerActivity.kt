@@ -29,7 +29,14 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val videoRepo = (application as SimplePlayerApplication).appContainer.videoRepository
-        _player = Player.Factory().build(this)
+        _player = Player.Factory().build(this).apply {
+            eventMediaItemTransitionCallback = { videoInfo: VideoInfo ->
+                viewModel.insertOrReplaceVideoInfo(videoInfo) }
+            eventVideoSizeChangedCallback = { width, height ->
+                requestedOrientation = if(width > height) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+        }
         _binding = ActivityPlayerBinding.inflate(layoutInflater)
         _viewModel = ViewModelProvider(this, PlayerViewModel.PlayerViewModelFactory(videoRepo, player)).get(PlayerViewModel::class.java)
         hideSystemBars()
@@ -43,11 +50,11 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         player.stop()
         player.release()
         _player = null
         binding.playerView.player = null
+        super.onDestroy()
     }
 
     private fun initUi() {
@@ -64,13 +71,6 @@ class PlayerActivity : AppCompatActivity() {
             this.player.prepare()
             this.player.play()
         }
-
-        player.eventMediaItemTransitionCallback = { videoInfo: VideoInfo -> viewModel.insertOrReplaceVideoInfo(videoInfo) }
-        player.eventVideoSizeChangedCallback = { width, height ->
-            requestedOrientation = if(width > height) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
-
         viewModel.requestPlayer(currentVideoId, requireNotNull(videoIds))
     }
 

@@ -23,8 +23,7 @@ class PlayerViewModel (private val repository: VideoRepository, private val play
             val videos = repository.getVideos(source as LongArray)
             player.apply {
                 withContext(Dispatchers.Main) {
-                    setMediaItems(videos)
-                    setCurrentVideo(videos.indexOfFirst { it.id == currentVideoId })
+                    setMediaItems(videos, videos.indexOfFirst { it.id == currentVideoId })
                 }
             }
             isSetVideo.postValue(true)
