@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.PlayerActivity
 import com.yang.simpleplayer.databinding.ActivityListBinding
 import com.yang.simpleplayer.fragments.list.folder.FolderListFragment
@@ -53,18 +54,23 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
         binding.searchBar.setOnCloseListener { binding.appbarTitle.visibility = View.VISIBLE; false }
 
         binding.tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
-            val listener = {position:Int ->
+            val listener = {tab: TabLayout.Tab ->
                 clearBackStack()
-                when(position) {
-                    0 -> changeRecyclerViewFragment(FolderListFragment(), false)
+                when(tab.position) {
+                    0 -> {
+                        tab.setIcon(R.drawable.ic_baseline_folder_48)
+                        changeRecyclerViewFragment(FolderListFragment(), false)
+                    }
                     1 -> changeRecyclerViewFragment(RecentVideoListFragment(), false)
                     2 -> changeRecyclerViewFragment(PlaylistListFragment(), false)
                 }
             }
-            override fun onTabSelected(tab: TabLayout.Tab?) { tab?.position?.let { listener(it) }}
-            override fun onTabUnselected(tab: TabLayout.Tab?) { }
+            override fun onTabSelected(tab: TabLayout.Tab?) { tab?.let { listener(it) }}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                if(tab?.position == 0) tab?.setIcon(R.drawable.ic_outline_folder_48_black)
+            }
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                tab?.position?.let { listener(it) }}
+                tab?.let { listener(it) }}
         })
     }
 

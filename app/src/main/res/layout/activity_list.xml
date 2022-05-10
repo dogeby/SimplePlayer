@@ -22,17 +22,16 @@
                 android:layout_height="?attr/actionBarSize"
                 app:contentInsetStart="5dp">
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
                 <TextView
                     android:id="@+id/appbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
                     android:gravity="center"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
+                    android:maxLines="1"
+                    android:maxEms="10"
+                    android:ellipsize="end"
                     android:text="@string/app_name"/>
 
                 <ImageButton
@@ -44,6 +43,14 @@
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_baseline_settings_36"
                     tools:ignore="SpeakableTextPresentCheck" />
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    app:searchIcon="@drawable/ic_baseline_search_36"
+                    android:layout_gravity="right"/>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
