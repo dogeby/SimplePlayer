@@ -22,9 +22,9 @@ class FolderListFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val videoRepo = ( activity?.application as SimplePlayerApplication).appContainer.videoRepository
+        val folderRepository = ( activity?.application as SimplePlayerApplication).appContainer.folderRepository
         _binding = FragmentFolderListBinding.inflate(layoutInflater)
-        _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(videoRepo)).get(FolderListViewModel::class.java)
+        _viewModel = ViewModelProvider(this, FolderListViewModel.FolderListViewModelFactory(folderRepository)).get(FolderListViewModel::class.java)
         initUi()
         return binding.root
     }
@@ -39,9 +39,9 @@ class FolderListFragment : Fragment() {
         viewModel.folderNames.observe(viewLifecycleOwner) { folders ->
             adapter.updateFolders(folders)
         }
-        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
-            (activity as FragmentNeeds).setProgressBar(progressVisible)
-        }
+//        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
+//            (activity as FragmentNeeds).setProgressBar(progressVisible)
+//        }
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
             (activity as FragmentNeeds).showToastMessage(getString(exceptionMessageResId.toInt()))
         }

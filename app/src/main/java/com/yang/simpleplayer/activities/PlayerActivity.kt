@@ -60,9 +60,9 @@ class PlayerActivity : AppCompatActivity() {
     private fun initUi() {
         val videoIds = intent.getLongArrayExtra(videoIdsKey)
         val currentVideoId = intent.getLongExtra(videoIdKey, 0L)
-        viewModel.progressVisible.observe(this) { progressVisible ->
-            setProgressBar(progressVisible)
-        }
+//        viewModel.progressVisible.observe(this) { progressVisible ->
+//            setProgressBar(progressVisible)
+//        }
         viewModel.exceptionMessageResId.observe(this) { exceptionMessageResId ->
             showToastMessage(getString(exceptionMessageResId.toInt()))
         }

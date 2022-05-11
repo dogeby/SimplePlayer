@@ -4,7 +4,6 @@ import com.yang.simpleplayer.data.VideoDao
 import com.yang.simpleplayer.data.VideoInfoDbDao
 import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.models.VideoInfo
-import java.util.*
 
 class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao: VideoInfoDbDao) {
 
@@ -26,17 +25,6 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
     suspend fun getAllVideoInfo() = videoInfoDbDao.getAllVideoInfo()
 
     suspend fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
-
-    /**
-     * 폴더 이름 요청
-     */
-    suspend fun getFolderNames():List<String> {
-        val folderNames = TreeSet<String>()
-        videoDao.getVideos().forEach { video ->
-            folderNames.add(video.relativePath)
-        }
-        return folderNames.toList()
-    }
 
     /**
      * 비디오 정보 DB

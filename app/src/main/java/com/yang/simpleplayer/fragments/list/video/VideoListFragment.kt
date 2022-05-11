@@ -50,9 +50,9 @@ class VideoListFragment : Fragment() {
         viewModel.videos.observe(viewLifecycleOwner) { videos ->
             adapter.updateVideos(videos)
         }
-        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
-            (activity as FragmentNeeds).setProgressBar(progressVisible)
-        }
+//        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
+//            (activity as FragmentNeeds).setProgressBar(progressVisible)
+//        }
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
             (activity as FragmentNeeds).showToastMessage(getString(exceptionMessageResId.toInt()))
         }
