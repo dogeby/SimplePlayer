@@ -14,7 +14,7 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
         return videoDao.getVideos().filter { video -> video.relativePath == folderName }
     }
 
-    suspend fun getVideos(ids:LongArray):List<Video> {
+    suspend fun getVideos(ids: LongArray):List<Video> {
         return videoDao.getVideos().filter { video -> ids.contains(video.id) }
     }
 
@@ -39,17 +39,5 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
 
     suspend fun delete(videoInfo:VideoInfo) {
         videoInfoDbDao.delete(videoInfo)
-    }
-
-    suspend fun checkInvalidVideoInfo() {
-        val videosInfo = getAllVideoInfo()
-        val videos = videoDao.getVideos()
-        val videoHashSet = HashSet<Long>()
-        videos.forEach { videoHashSet.add(it.id) }
-        videosInfo.forEach { videoInfo ->
-            if(!videoHashSet.contains(videoInfo.id)) {
-                delete(videoInfo)
-            }
-        }
     }
 }

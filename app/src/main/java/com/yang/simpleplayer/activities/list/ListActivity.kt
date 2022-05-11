@@ -22,6 +22,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     private val binding: ActivityListBinding get() = requireNotNull(_binding)
     private var isDefault = true //ListActivity recreate시 FolderListFragment 중복 생성 문제 방지
     private val folderNameKey = "folderName"
+    private val playlistIdKey = "playlistId"
     private val videoIdsKey = "videoIds"
     private val videoIdKey = "videoId"
     private val isDefaultKey = "isDefaultKey"
@@ -120,6 +121,14 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     override fun startVideoListFragment(folderName: String) {
         val bundle = Bundle().apply {
             putString(folderNameKey, folderName)
+        }
+        val fragment = VideoListFragment().apply { arguments = bundle }
+        changeRecyclerViewFragment(fragment, true)
+    }
+
+    override fun startVideoListFragment(playlistId: Long) {
+        val bundle = Bundle().apply {
+            putLong(playlistIdKey, playlistId)
         }
         val fragment = VideoListFragment().apply { arguments = bundle }
         changeRecyclerViewFragment(fragment, true)

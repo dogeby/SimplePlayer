@@ -6,12 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.yang.simpleplayer.models.Playlist
+import com.yang.simpleplayer.models.PlaylistVideoInfoCrossRef
 import com.yang.simpleplayer.models.VideoInfo
 
-@Database(entities = [VideoInfo::class, Playlist::class], version = 1, exportSchema = false)
+@Database(entities = [VideoInfo::class, Playlist::class, PlaylistVideoInfoCrossRef::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract  fun videoDbDao():VideoInfoDbDao
+    abstract  fun videoInfoDbDao():VideoInfoDbDao
     abstract  fun playlistDbDao():PlaylistDbDao
 
     companion object {

@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Playlist(
-    @PrimaryKey @ColumnInfo(name = "video_id") val videoId:Long,
-    @ColumnInfo(name = "name") var name:String
+    @PrimaryKey @ColumnInfo(name ="playlist_id") val playlistId: Long,
+    @ColumnInfo(name = "name") val name:String
 )

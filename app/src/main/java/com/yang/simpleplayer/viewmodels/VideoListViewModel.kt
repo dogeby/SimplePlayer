@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.yang.simpleplayer.models.Video
+import com.yang.simpleplayer.repositories.PlaylistRepository
 import com.yang.simpleplayer.repositories.VideoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
  * videoIds에 해당하는 비디오들을 post한다
  */
 
-class VideoListViewModel(private val repository: VideoRepository):ViewModel() {
+class VideoListViewModel(private val videoRepository: VideoRepository, private val playlistRepository: PlaylistRepository):ViewModel() {
     val progressVisible = MutableLiveData<Boolean>()
     val videos = MutableLiveData<List<Video>>()
     val exceptionMessageResId = MutableLiveData<String>()
@@ -24,10 +25,15 @@ class VideoListViewModel(private val repository: VideoRepository):ViewModel() {
         progressVisible.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
 
-            val videoList = if(source is String) repository.getVideos(source)
-                else repository.getVideos(source as LongArray)
+            val videoList = if(source is String) {
+                videoRepository.getVideos(source)
+            } else {
+                val playlistWithVideoInfo = playlistRepository.getPlaylistWithVideoInfo(source as Long)
+                val ids = LongArray(playlistWithVideoInfo.videoInfo.size){playlistWithVideoInfo.videoInfo[it].videoId}
+                videoRepository.getVideos(ids)
+            }
             videoList.forEach { video ->
-                repository.getVideoInfo(video.id)?.let {
+                videoRepository.getVideoInfo(video.id)?.let {
                     video.videoInfo = it
                 }
             }
@@ -36,11 +42,11 @@ class VideoListViewModel(private val repository: VideoRepository):ViewModel() {
         }
     }
 
-    class VideoListViewModelFactory(private val videoRepo:VideoRepository):
+    class VideoListViewModelFactory(private val videoRepo:VideoRepository, private val playlistRepo:PlaylistRepository):
             ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(VideoListViewModel::class.java)) {
-                return VideoListViewModel(videoRepo) as T
+                return VideoListViewModel(videoRepo, playlistRepo) as T
             }
             throw IllegalAccessException()
         }

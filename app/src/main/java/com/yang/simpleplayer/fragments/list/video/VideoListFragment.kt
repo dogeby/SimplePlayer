@@ -22,14 +22,15 @@ class VideoListFragment : Fragment() {
     private var _source: Any? = null
     private val source: Any get() = requireNotNull(_source)
     private val folderNameKey = "folderName"
-    private val videoIdsKey = "videoIds"
+    private val playlistIdKey = "playlistId"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val videoRepo = (activity?.application as SimplePlayerApplication).appContainer.videoRepository
+        val playlistRepo = (activity?.application as SimplePlayerApplication).appContainer.playlistRepository
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
         arguments?.let {
-            _source = it.getString(folderNameKey)?:it.getLongArray(videoIdsKey)
+            _source = it.getString(folderNameKey)?:it.getLongArray(playlistIdKey)
         }
-        _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo)).get(VideoListViewModel::class.java)
+        _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo, playlistRepo)).get(VideoListViewModel::class.java)
         initUi()
         return binding.root
     }

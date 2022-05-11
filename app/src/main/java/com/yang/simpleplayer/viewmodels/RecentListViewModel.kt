@@ -19,7 +19,7 @@ class RecentListViewModel(private val videoRepository: VideoRepository): ViewMod
         progressVisible.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             val recentVideosInfo = videoRepository.getRecentVideosInfo()
-            val recentVideoIds = LongArray(recentVideosInfo.size){recentVideosInfo[it].id}
+            val recentVideoIds = LongArray(recentVideosInfo.size){recentVideosInfo[it].videoId}
             val videoList = videoRepository.getVideos(recentVideoIds)
             withContext(Dispatchers.Default) {
                 val videoMap = HashMap<Long, Video>()
@@ -28,7 +28,7 @@ class RecentListViewModel(private val videoRepository: VideoRepository): ViewMod
                 }
                 val resultVideoList = mutableListOf<Video>()
                 recentVideosInfo.forEach { videoInfo ->
-                    videoMap[videoInfo.id]?.let {
+                    videoMap[videoInfo.videoId]?.let {
                         it.videoInfo = videoInfo
                         resultVideoList.add(it)
                     }

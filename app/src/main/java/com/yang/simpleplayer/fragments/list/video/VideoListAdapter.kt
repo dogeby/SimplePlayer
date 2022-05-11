@@ -44,7 +44,7 @@ class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoViewHolder>(
         return ItemFilter()
     }
 
-    inner class ItemFilter:Filter() {
+    private inner class ItemFilter:Filter() {
         override fun performFiltering(constraint: CharSequence?) = FilterResults().apply {
             val constraintString = constraint.toString().lowercase()
             values = if(constraintString.isNullOrBlank()) {
