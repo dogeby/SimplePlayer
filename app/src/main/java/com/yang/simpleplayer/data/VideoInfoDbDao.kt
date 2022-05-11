@@ -15,14 +15,14 @@ interface VideoInfoDbDao {
     suspend fun delete(videoInfo: VideoInfo)
 
     @Query("SELECT id, playback_position_ms, playback_date FROM VideoInfo ORDER BY playback_date DESC LIMIT 50")
-    fun getRecentVideosInfo(): List<VideoInfo>
+    suspend fun getRecentVideosInfo(): List<VideoInfo>
 
     @Query("SELECT id, playback_position_ms, playback_date FROM VideoInfo WHERE id IN (:videoIds)")
-    fun getVideosInfo(videoIds:LongArray):List<VideoInfo>
+    suspend fun getVideosInfo(videoIds:LongArray):List<VideoInfo>
 
     @Query("SELECT id, playback_position_ms, playback_date FROM VideoInfo WHERE id = :videoId")
-    fun getVideoInfo(videoId:Long):VideoInfo
+    suspend fun getVideoInfo(videoId:Long):VideoInfo
 
     @Query("SELECT id, playback_position_ms, playback_date FROM VideoInfo")
-    fun getAllVideoInfo():List<VideoInfo>
+    suspend fun getAllVideoInfo():List<VideoInfo>
 }

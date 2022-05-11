@@ -19,13 +19,13 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
         return videoDao.getVideos().filter { video -> ids.contains(video.id) }
     }
 
-    fun getVideoInfo(id:Long) = videoInfoDbDao.getVideoInfo(id)
+    suspend fun getVideoInfo(id:Long) = videoInfoDbDao.getVideoInfo(id)
 
-    fun getVideosInfo(ids: LongArray) = videoInfoDbDao.getVideosInfo(ids)
+    suspend fun getVideosInfo(ids: LongArray) = videoInfoDbDao.getVideosInfo(ids)
 
-    fun getAllVideoInfo() = videoInfoDbDao.getAllVideoInfo()
+    suspend fun getAllVideoInfo() = videoInfoDbDao.getAllVideoInfo()
 
-    fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
+    suspend fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
 
     /**
      * 폴더 이름 요청
