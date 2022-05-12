@@ -1,16 +1,18 @@
 package com.yang.simpleplayer.fragments.list.video
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
-import com.yang.simpleplayer.utils.Format
 import com.yang.simpleplayer.viewmodels.VideoListViewModel
 
 class VideoListFragment : Fragment() {
@@ -28,7 +30,7 @@ class VideoListFragment : Fragment() {
         val playlistRepo = (activity?.application as SimplePlayerApplication).appContainer.playlistRepository
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
         arguments?.let {
-            _source = it.getString(folderNameKey)?:it.getLongArray(playlistIdKey)
+            _source = it.getString(folderNameKey)?:it.getLong(playlistIdKey)
         }
         _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo, playlistRepo)).get(VideoListViewModel::class.java)
         initUi()
@@ -44,7 +46,19 @@ class VideoListFragment : Fragment() {
     private fun initUi() {
         val adapter = VideoListAdapter().apply {
             itemViewOnclick = (activity as FragmentNeeds)::startPlayerActivity
-            // TODO: morebtn 동작 코드 작성
+            moreBtnOnClick = { video ->
+                activity?.let {
+                    val builder = AlertDialog.Builder(it)
+                    builder.setItems(R.array.more_btn_arr, DialogInterface.OnClickListener{ dialog, which ->
+                        when(which) {
+                            /**
+                             * 0 -> 플레이리스트에 추가
+                             */
+                            0 -> (activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))
+                        }
+                    }).create().show()
+                }
+            }
         }
         binding.videoList.adapter = adapter
 
@@ -65,7 +79,6 @@ class VideoListFragment : Fragment() {
                 return false
             }
         })
-        (activity as FragmentNeeds).setAppbarTitleText(Format.getParentFolderName(source.toString()))
         viewModel.list(source)
     }
 

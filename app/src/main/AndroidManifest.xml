@@ -3,6 +3,7 @@
     package="com.yang.simpleplayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".SimplePlayerApplication"
         android:allowBackup="true"
@@ -12,9 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SimplePlayer">
         <activity
+            android:name=".activities.PlaylistInsertActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PlaylistManageActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.PlayerActivity"
-            android:exported="false"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
             android:theme="@style/Theme.SimplePlayer" />
         <activity
             android:name=".activities.MainActivity"

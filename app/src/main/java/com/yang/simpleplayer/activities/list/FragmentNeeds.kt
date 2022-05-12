@@ -11,6 +11,6 @@ interface FragmentNeeds {
     fun startVideoListFragment(folderName: String)
     fun startVideoListFragment(playlistId:Long)
     fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray)
-    fun setAppbarTitleText(title:String)
+    fun startPlaylistManageActivity(videoIds:LongArray)
     fun setOnQueryTextListener(listener: SearchView.OnQueryTextListener)
 }

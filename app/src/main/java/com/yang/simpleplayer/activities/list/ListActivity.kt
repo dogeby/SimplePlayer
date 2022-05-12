@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.PlayerActivity
+import com.yang.simpleplayer.activities.PlaylistManageActivity
 import com.yang.simpleplayer.databinding.ActivityListBinding
 import com.yang.simpleplayer.fragments.list.folder.FolderListFragment
 import com.yang.simpleplayer.fragments.list.playlist.PlaylistListFragment
@@ -26,6 +27,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     private val videoIdsKey = "videoIds"
     private val videoIdKey = "videoId"
     private val isDefaultKey = "isDefaultKey"
+    private var appbarTitleVisibility = View.VISIBLE    //toolbar에 backBtn있을시 title View.GONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,19 +53,36 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
         binding.settings.setOnClickListener {
             // TODO: Settings 버튼 클릭 리스너
         }
-        binding.searchBar.setOnSearchClickListener { binding.appbarTitle.visibility = View.GONE }
-        binding.searchBar.setOnCloseListener { binding.appbarTitle.visibility = View.VISIBLE; false }
+        binding.searchBar.setOnSearchClickListener {
+            binding.appbarTitle.visibility = View.GONE
+            binding.backBtn.visibility = View.GONE
+        }
+        binding.searchBar.setOnCloseListener {
+            if(appbarTitleVisibility == View.GONE) {
+                binding.backBtn.visibility = View.VISIBLE
+            }
+            binding.appbarTitle.visibility = appbarTitleVisibility
+            false
+        }
 
         binding.tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             val listener = {tab: TabLayout.Tab ->
                 clearBackStack()
+                removeBackBtnAndSetTitle()
                 when(tab.position) {
                     0 -> {
                         tab.setIcon(R.drawable.ic_baseline_folder_48)
+                        setAppbarTitleText(R.string.appbar_title_folder)
                         changeRecyclerViewFragment(FolderListFragment(), false)
                     }
-                    1 -> changeRecyclerViewFragment(RecentVideoListFragment(), false)
-                    2 -> changeRecyclerViewFragment(PlaylistListFragment(), false)
+                    1 -> {
+                        setAppbarTitleText(R.string.appbar_title_recent)
+                        changeRecyclerViewFragment(RecentVideoListFragment(), false)
+                    }
+                    2 -> {
+                        setAppbarTitleText(R.string.appbar_title_playlist)
+                        changeRecyclerViewFragment(PlaylistListFragment(), false)
+                    }
                 }
             }
             override fun onTabSelected(tab: TabLayout.Tab?) { tab?.let { listener(it) }}
@@ -73,6 +92,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 tab?.let { listener(it) }}
         })
+        binding.backBtn.setOnClickListener(onClickBackBtnListener())
     }
 
     private fun clearBackStack() {
@@ -80,6 +100,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     private fun addDefaultListFragment() {
+        setAppbarTitleText(R.string.appbar_title_folder)
         supportFragmentManager.beginTransaction().add(binding.recyclerViewContainer.id, FolderListFragment()).commit()
     }
 
@@ -96,11 +117,33 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
         binding.searchBar.isIconified = true
     }
 
+    private fun setBackBtnAndRemoveTitle(){
+        appbarTitleVisibility = View.GONE
+        binding.appbarTitle.visibility = appbarTitleVisibility
+        binding.backBtn.visibility = View.VISIBLE
+    }
+
+    private fun removeBackBtnAndSetTitle() {
+        appbarTitleVisibility = View.VISIBLE
+        binding.appbarTitle.visibility = appbarTitleVisibility
+        binding.backBtn.visibility = View.GONE
+    }
+
+    private fun onClickBackBtnListener() = View.OnClickListener {
+        removeBackBtnAndSetTitle()
+        supportFragmentManager.popBackStack()
+    }
+
+    private fun setAppbarTitleText(titleStrId: Int) { binding.appbarTitle.text = getString(titleStrId) }
+
     override fun onBackPressed() {
         if(!binding.searchBar.isIconified) {
             setSearchBarIconified()
         }
-        else super.onBackPressed()
+        else {
+            removeBackBtnAndSetTitle()
+            super.onBackPressed()
+        }
     }
 
     override fun showToastMessage(msg: String) {
@@ -119,6 +162,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     override fun startVideoListFragment(folderName: String) {
+        setBackBtnAndRemoveTitle()
         val bundle = Bundle().apply {
             putString(folderNameKey, folderName)
         }
@@ -127,11 +171,19 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     override fun startVideoListFragment(playlistId: Long) {
+        setBackBtnAndRemoveTitle()
         val bundle = Bundle().apply {
             putLong(playlistIdKey, playlistId)
         }
         val fragment = VideoListFragment().apply { arguments = bundle }
         changeRecyclerViewFragment(fragment, true)
+    }
+
+    override fun startPlaylistManageActivity(videoIds: LongArray) {
+        isDefault = false
+        Intent(this, PlaylistManageActivity::class.java).apply {
+            putExtra(videoIdsKey, videoIds)
+        }. run { startActivity(this) }
     }
 
     override fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray) {
@@ -141,8 +193,6 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
             putExtra(videoIdKey, currentVideoId)
         }. run { startActivity(this) }
     }
-
-    override fun setAppbarTitleText(title: String) { binding.appbarTitle.text = title }
 
     override fun setOnQueryTextListener(listener: SearchView.OnQueryTextListener) { binding.searchBar.setOnQueryTextListener(listener) }
 }

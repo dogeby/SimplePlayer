@@ -9,7 +9,6 @@ import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ViewPlaylistItemBinding
 import com.yang.simpleplayer.models.PlaylistWithVideoInfo
 
-// TODO: PlayListAdapter 작성
 class PlaylistListAdapter:RecyclerView.Adapter<PlaylistListAdapter.PlaylistViewHolder>(), Filterable{
 
     private val playlistWithVideoInfoList = mutableListOf<PlaylistWithVideoInfo>()

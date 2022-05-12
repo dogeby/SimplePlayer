@@ -6,14 +6,15 @@ import com.yang.simpleplayer.models.Playlist
 import com.yang.simpleplayer.models.PlaylistVideoInfoCrossRef
 import com.yang.simpleplayer.models.VideoInfo
 
+// TODO: 플레이리스트 안 동영상들 순서?
 class PlaylistRepository(private val playlistDbDao: PlaylistDbDao, private val videoInfoDbDao: VideoInfoDbDao) {
 
     //ABORT
-    suspend fun insertPlaylist(playlist:Playlist) {
+    fun insertPlaylist(playlist:Playlist) {
         playlistDbDao.insertPlaylist(playlist)
     }
 
-    //REPLACE
+    //IGNORE
     suspend fun addVideoInfoOnPlaylist(playlistVideoInfoCrossRef: PlaylistVideoInfoCrossRef) {
         if(videoInfoDbDao.getVideoInfo(playlistVideoInfoCrossRef.videoId) == null) {
             videoInfoDbDao.insertOrReplace(VideoInfo(playlistVideoInfoCrossRef.videoId))
@@ -21,14 +22,16 @@ class PlaylistRepository(private val playlistDbDao: PlaylistDbDao, private val v
         playlistDbDao.insertPlaylistVideoInfoCrossRef(playlistVideoInfoCrossRef)
     }
 
-    suspend fun deletePlaylist(playlistId: Long) {
-        playlistDbDao.deletePlaylistVideoInfoCrossRef(playlistId)
-        playlistDbDao.deletePlaylist(playlistId)
+    fun deletePlaylist(playlist: Playlist) {
+        playlistDbDao.deletePlaylist(playlist)
+        playlistDbDao.deletePlaylistVideoInfoCrossRef(playlist.playlistId)
     }
 
-    suspend fun removeVideoInfoFromPlaylist(playlistId:Long, videoInfoId:Long) {
-        playlistDbDao.deletePlayListVideoInfoCrossRef(playlistId, videoInfoId)
+    fun removeVideoInfoFromPlaylist(playlistVideoInfoCrossRef: PlaylistVideoInfoCrossRef) {
+        playlistDbDao.deletePlayListVideoInfoCrossRef(playlistVideoInfoCrossRef)
     }
+
+    suspend fun getPlaylist(name:String) = playlistDbDao.getPlaylist(name)
 
     suspend fun getPlaylists() = playlistDbDao.getPlaylists()
 

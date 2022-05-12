@@ -9,25 +9,28 @@ import com.yang.simpleplayer.models.VideoWithPlaylists
 @Dao
 interface PlaylistDbDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertPlaylist(playlist:Playlist)
+    fun insertPlaylist(playlist:Playlist)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlaylistVideoInfoCrossRef(playlistVideoInfoCrossRef: PlaylistVideoInfoCrossRef)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertPlaylistVideoInfoCrossRef(playlistVideoInfoCrossRef: PlaylistVideoInfoCrossRef)
 
-    @Query("DELETE FROM Playlist WHERE playlist_id = :playlistId")
-    suspend fun deletePlaylist(playlistId:Long)
+    @Delete
+    fun deletePlaylist(playlist: Playlist)
+
+    @Delete
+    fun deletePlayListVideoInfoCrossRef(playlistVideoInfoCrossRef: PlaylistVideoInfoCrossRef)
 
     @Query("DELETE FROM PlaylistVideoInfoCrossRef WHERE playlist_id = :playlistId")
-    suspend fun deletePlaylistVideoInfoCrossRef(playlistId: Long)
+    fun deletePlaylistVideoInfoCrossRef(playlistId: Long)
 
     @Query("DELETE FROM PlaylistVideoInfoCrossRef WHERE video_id = :videoInfoId")
-    suspend fun deletePlayListVideoInfoCrossRef(videoInfoId:Long)
-
-    @Query("DELETE FROM PlaylistVideoInfoCrossRef WHERE playlist_id = :playlistId AND video_id = :videoInfoId")
-    suspend fun deletePlayListVideoInfoCrossRef(playlistId: Long, videoInfoId:Long)
+    fun deletePlayListVideoInfoCrossRef(videoInfoId:Long)
 
     @Query("SELECT * FROM Playlist")
     suspend fun getPlaylists():List<Playlist>
+
+    @Query("SELECT * FROM Playlist WHERE name = :name")
+    suspend fun getPlaylist(name:String):Playlist
 
     @Query("SELECT * FROM PlaylistVideoInfoCrossRef")
     suspend fun getAllPlaylistVideoInfoCrossRef():List<PlaylistVideoInfoCrossRef>

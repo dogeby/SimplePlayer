@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
@@ -67,7 +66,6 @@ class RecentVideoListFragment : Fragment() {
                 return false
             }
         })
-        (activity as FragmentNeeds).setAppbarTitleText(getString(R.string.appbar_title_recent))
         viewModel.list()
     }
 

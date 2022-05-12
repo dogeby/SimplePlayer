@@ -7,19 +7,25 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.FragmentPlaylistListBinding
+import com.yang.simpleplayer.models.PlaylistWithVideoInfo
 import com.yang.simpleplayer.viewmodels.PlaylistViewModel
 
-class PlaylistListFragment : Fragment() {
+open class PlaylistListFragment : Fragment() {
 
     private var _viewModel:PlaylistViewModel? = null
-    private val viewModel:PlaylistViewModel get() = requireNotNull(_viewModel)
+    val viewModel:PlaylistViewModel get() = requireNotNull(_viewModel)
     private var _binding:FragmentPlaylistListBinding? = null
-    private val binding:FragmentPlaylistListBinding get() =  requireNotNull(_binding)
+    val binding:FragmentPlaylistListBinding get() =  requireNotNull(_binding)
+    private var _adapter:PlaylistListAdapter? = null
+    private val adapter:PlaylistListAdapter get() = requireNotNull(_adapter)
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.list()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,18 +39,11 @@ class PlaylistListFragment : Fragment() {
     }
 
     private fun initUi() {
-        val adapter = PlaylistListAdapter().apply {
-            itemViewOnClick = (activity as FragmentNeeds)::startVideoListFragment
-            // TODO: more 버튼 리스너 작성
-        }
+        _adapter = PlaylistListAdapter()
         binding.playlistList.adapter = adapter
-
+        setItemOnClickListener((activity as FragmentNeeds)::startVideoListFragment)
         viewModel.playlistsWithVideoInfo.observe(viewLifecycleOwner) { playlistsWithVideoInfo ->
             adapter.updatePlaylists(playlistsWithVideoInfo)
-        }
-
-        viewModel.playlistList.observe(viewLifecycleOwner) { playlists ->
-            // TODO: 플레이리스트 목록 불러오기
         }
 
         (activity as FragmentNeeds).setRefreshListener { viewModel.list() }
@@ -56,7 +55,17 @@ class PlaylistListFragment : Fragment() {
                 return false
             }
         })
-        (activity as FragmentNeeds).setAppbarTitleText(getString(R.string.appbar_title_playlist))
-        viewModel.list()
+    }
+
+    fun setItemOnClickListener(itemViewCallback:(Long) -> Unit) {
+        adapter.apply {
+            itemViewOnClick = itemViewCallback
+        }
+    }
+
+    fun setMoreBtnOnClickListener(moreBtnCallback:(PlaylistWithVideoInfo) -> Unit) {
+        adapter.apply {
+            moreBtnOnClick = moreBtnCallback
+        }
     }
 }
