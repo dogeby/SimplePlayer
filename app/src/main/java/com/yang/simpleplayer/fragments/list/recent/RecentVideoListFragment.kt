@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
+import com.yang.simpleplayer.common.MoreDialogFactory
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.fragments.list.video.VideoListAdapter
 import com.yang.simpleplayer.viewmodels.RecentListViewModel
@@ -45,7 +47,23 @@ class RecentVideoListFragment : Fragment() {
     private fun initUi() {
         val adapter = VideoListAdapter().apply {
             itemViewOnclick = (activity as FragmentNeeds)::startPlayerActivity
-            // TODO: morebtn 동작 코드 작성
+            moreBtnOnClick = { video ->
+                /**
+                 * video more 버튼 클릭시
+                 * 플레이리스트에 동영상 추가를
+                 * 최근 기록에서 동영상 기록 제거
+                 */
+                val moreBtnStrArr = mutableListOf<String>()
+                val callbacks = mutableListOf<()->Unit>()
+                moreBtnStrArr.add(getString(R.string.videoAddToPlaylist))
+                callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))}
+                moreBtnStrArr.add(getString(R.string.videoDeleteFromRecentList))
+                callbacks.add {
+                    viewModel.deletePlaybackDate(video.id)
+                    viewModel.list()
+                }
+                context?.let { MoreDialogFactory.create(it, moreBtnStrArr.toTypedArray(), *callbacks.toTypedArray()).show() }
+            }
         }
         binding.videoList.adapter = adapter
 

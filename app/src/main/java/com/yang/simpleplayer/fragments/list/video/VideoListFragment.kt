@@ -1,17 +1,16 @@
 package com.yang.simpleplayer.fragments.list.video
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
+import com.yang.simpleplayer.common.MoreDialogFactory
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.viewmodels.VideoListViewModel
 
@@ -25,6 +24,8 @@ class VideoListFragment : Fragment() {
     private val source: Any get() = requireNotNull(_source)
     private val folderNameKey = "folderName"
     private val playlistIdKey = "playlistId"
+
+    // TODO: source any인거 바꾸기
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val videoRepo = (activity?.application as SimplePlayerApplication).appContainer.videoRepository
         val playlistRepo = (activity?.application as SimplePlayerApplication).appContainer.playlistRepository
@@ -47,17 +48,23 @@ class VideoListFragment : Fragment() {
         val adapter = VideoListAdapter().apply {
             itemViewOnclick = (activity as FragmentNeeds)::startPlayerActivity
             moreBtnOnClick = { video ->
-                activity?.let {
-                    val builder = AlertDialog.Builder(it)
-                    builder.setItems(R.array.more_btn_arr, DialogInterface.OnClickListener{ dialog, which ->
-                        when(which) {
-                            /**
-                             * 0 -> 플레이리스트에 추가
-                             */
-                            0 -> (activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))
-                        }
-                    }).create().show()
+                /**
+                 * video more 버튼 클릭 시
+                 * 플레이리스트에 동영상 추가
+                 * 만약 플레이리스트의 동영상 more 버튼을 클릭한거면 플레이리스트에서 해당 동영상 제거
+                 */
+                val moreBtnStrArr = mutableListOf<String>()
+                val callbacks = mutableListOf<()->Unit>()
+                moreBtnStrArr.add(getString(R.string.videoAddToPlaylist))
+                callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))}
+                if(source is Long) {
+                    moreBtnStrArr.add(getString(R.string.videoDeleteFromPlaylist))
+                    callbacks.add {
+                        viewModel.deleteVideoFromPlaylist(video.id, source as Long)
+                        viewModel.list(source)
+                    }
                 }
+                context?.let { MoreDialogFactory.create(it, moreBtnStrArr.toTypedArray(), *callbacks.toTypedArray()).show() }
             }
         }
         binding.videoList.adapter = adapter

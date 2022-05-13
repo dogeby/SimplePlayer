@@ -39,6 +39,12 @@ class RecentListViewModel(private val videoRepository: VideoRepository): ViewMod
         }
     }
 
+    fun deletePlaybackDate(videoId:Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            videoRepository.updatePlaybackDateNull(videoId)
+        }
+    }
+
     class RecentListViewModelFactory(private val videoRepository: VideoRepository):ViewModelProvider.Factory{
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(RecentListViewModel::class.java)) {

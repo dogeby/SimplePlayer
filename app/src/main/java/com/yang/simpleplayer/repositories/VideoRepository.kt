@@ -18,14 +18,6 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
         return videoDao.getVideos().filter { video -> ids.contains(video.id) }
     }
 
-    suspend fun getVideoInfo(id:Long) = videoInfoDbDao.getVideoInfo(id)
-
-    suspend fun getVideosInfo(ids: LongArray) = videoInfoDbDao.getVideosInfo(ids)
-
-    suspend fun getAllVideoInfo() = videoInfoDbDao.getAllVideoInfo()
-
-    suspend fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
-
     /**
      * 비디오 정보 DB
      */
@@ -40,4 +32,14 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
     fun delete(videoInfo:VideoInfo) {
         videoInfoDbDao.delete(videoInfo)
     }
+
+    suspend fun getVideoInfo(id:Long) = videoInfoDbDao.getVideoInfo(id)
+
+    suspend fun getVideosInfo(ids: LongArray) = videoInfoDbDao.getVideosInfo(ids)
+
+    suspend fun getAllVideoInfo() = videoInfoDbDao.getAllVideoInfo()
+
+    suspend fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
+
+    fun updatePlaybackDateNull(videoId: Long) = videoInfoDbDao.updatePlaybackDateNull(videoId)
 }

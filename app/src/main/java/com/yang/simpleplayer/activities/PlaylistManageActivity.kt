@@ -58,19 +58,6 @@ class PlaylistManageActivity : AppCompatActivity(),FragmentNeeds{
                 finish()
             }
         }
-        playlistListFragment.setMoreBtnOnClickListener { playlistWithVideoInfo ->   //플레이리스트 more 버튼 클릭 시
-            this.let {
-                val builder = AlertDialog.Builder(it)
-                builder.setItems(R.array.playlist_manage_more_btn_arr){ _, which ->
-                    when(which) {
-                        0 -> {  //플레이리스트 삭제
-                            playlistListFragment.viewModel.deletePlaylist(playlistWithVideoInfo.playlist)
-                            playlistListFragment.viewModel.list()
-                        }
-                    }
-                }.create().show()
-            }
-        }
         binding.addPlaylist.setOnClickListener {    //플레이리스트 추가 버튼 클릭 시 다이어그램 보여주기
             this.let {
                 val builder = AlertDialog.Builder(it)

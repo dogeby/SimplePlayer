@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.yang.simpleplayer.models.PlaylistVideoInfoCrossRef
 import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.repositories.PlaylistRepository
 import com.yang.simpleplayer.repositories.VideoRepository
@@ -39,6 +40,12 @@ class VideoListViewModel(private val videoRepository: VideoRepository, private v
             }
             videos.postValue(videoList)
             progressVisible.postValue(false)
+        }
+    }
+
+    fun deleteVideoFromPlaylist(videoId:Long, playlistId:Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistRepository.removeVideoInfoFromPlaylist(PlaylistVideoInfoCrossRef(playlistId, videoId))
         }
     }
 

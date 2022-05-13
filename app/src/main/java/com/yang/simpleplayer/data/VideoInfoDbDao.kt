@@ -10,11 +10,12 @@ interface VideoInfoDbDao {
 
     @Update
     fun update(videoInfo: VideoInfo)
-    /**
-     * 최근 기록 삭제 같은 경우 playback_date를 NULL로 변경 필요
-     */
+
     @Delete
     fun delete(videoInfo: VideoInfo)
+
+    @Query("UPDATE VideoInfo SET playback_date = NULL WHERE video_id = :videoId")
+    fun updatePlaybackDateNull(videoId:Long)
 
     @Query("SELECT video_id, playback_position_ms, playback_date FROM VideoInfo WHERE playback_date IS NOT NULL ORDER BY playback_date DESC LIMIT 50")
     suspend fun getRecentVideosInfo(): List<VideoInfo>
