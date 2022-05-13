@@ -5,7 +5,7 @@ import androidx.appcompat.widget.SearchView
 
 interface FragmentNeeds {
     fun getApplication(): Application
-    fun showToastMessage(msg: String)
+    fun showToastMessage(resId:Int)
     fun setProgressBar(visible:Boolean)
     fun setRefreshListener(update:()->Unit)
     fun startVideoListFragment(folderName: String)

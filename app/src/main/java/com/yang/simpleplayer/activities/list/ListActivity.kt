@@ -146,8 +146,8 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
         }
     }
 
-    override fun showToastMessage(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    override fun showToastMessage(resId:Int) {
+        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
     }
 
     override fun setProgressBar(visible:Boolean) {

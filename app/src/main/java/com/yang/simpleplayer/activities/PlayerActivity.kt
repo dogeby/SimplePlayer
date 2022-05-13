@@ -64,7 +64,7 @@ class PlayerActivity : AppCompatActivity() {
 //            setProgressBar(progressVisible)
 //        }
         viewModel.exceptionMessageResId.observe(this) { exceptionMessageResId ->
-            showToastMessage(getString(exceptionMessageResId.toInt()))
+            showToastMessage(exceptionMessageResId.toInt())
         }
         viewModel.isSetVideo.observe(this) {
             this.player.attachStyledPlayerView(binding.playerView)
@@ -80,8 +80,8 @@ class PlayerActivity : AppCompatActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
     }
 
-    private fun showToastMessage(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    private fun showToastMessage(resId:Int) {
+        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
     }
     private fun setProgressBar(visible:Boolean) {
         binding.progressBar.visibility = if(visible) View.VISIBLE else View.GONE

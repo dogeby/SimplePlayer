@@ -84,13 +84,13 @@ class PlaylistManageActivity : AppCompatActivity(),FragmentNeeds{
             }.show()
         }
         viewModel.isInsertFail.observe(this) { isInsertFail ->  //플레이리스트 이름 중복 시 에러 메시지 출력
-            if(isInsertFail) showToastMessage(getString(R.string.name_duplicate))
+            if(isInsertFail) showToastMessage(R.string.name_duplicate)
             else playlistListFragment.viewModel.list()
         }
     }
 
-    override fun showToastMessage(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    override fun showToastMessage(resId:Int) {
+        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
     }
     override fun setProgressBar(visible: Boolean) { }
     override fun setRefreshListener(update: () -> Unit) {

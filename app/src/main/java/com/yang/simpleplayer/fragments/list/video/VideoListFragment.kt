@@ -69,7 +69,7 @@ class VideoListFragment : Fragment() {
 //            (activity as FragmentNeeds).setProgressBar(progressVisible)
 //        }
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
-            (activity as FragmentNeeds).showToastMessage(getString(exceptionMessageResId.toInt()))
+            (activity as FragmentNeeds).showToastMessage(exceptionMessageResId.toInt())
         }
         (activity as FragmentNeeds).setRefreshListener { viewModel.list(source) }
         (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
