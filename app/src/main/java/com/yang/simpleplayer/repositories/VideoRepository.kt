@@ -29,15 +29,15 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
     /**
      * 비디오 정보 DB
      */
-    suspend fun insertOrReplace(videoInfo:VideoInfo) {
+    fun insertOrReplace(videoInfo:VideoInfo) {
         videoInfoDbDao.insertOrReplace(videoInfo)
     }
 
-    suspend fun update(videoInfo:VideoInfo) {
+    fun update(videoInfo:VideoInfo) {
         videoInfoDbDao.update(videoInfo)
     }
 
-    suspend fun delete(videoInfo:VideoInfo) {
+    fun delete(videoInfo:VideoInfo) {
         videoInfoDbDao.delete(videoInfo)
     }
 }
