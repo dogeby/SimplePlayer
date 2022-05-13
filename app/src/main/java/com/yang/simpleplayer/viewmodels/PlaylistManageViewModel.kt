@@ -9,24 +9,24 @@ import com.yang.simpleplayer.repositories.PlaylistRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlaylistInsertViewModel(private val playlistRepository: PlaylistRepository): ViewModel() {
-    val isInsertSuccess = MutableLiveData<Boolean>()
+class PlaylistManageViewModel(private val playlistRepository: PlaylistRepository): ViewModel() {
+    val isInsertFail = MutableLiveData<Boolean>()
 
     fun insertPlaylist(playlist:Playlist) {
         viewModelScope.launch(Dispatchers.IO){
             if(playlistRepository.getPlaylist(playlist.name) == null) {
                 playlistRepository.insertPlaylist(playlist)
-                isInsertSuccess.postValue(true)
+                isInsertFail.postValue(false)
             } else {
-                isInsertSuccess.postValue(false)
+                isInsertFail.postValue(true)
             }
         }
     }
 
-    class PlaylistInsertViewModelFactory(private val playlistRepository: PlaylistRepository):ViewModelProvider.Factory {
+    class PlaylistManageViewModelFactory(private val playlistRepository: PlaylistRepository):ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if(modelClass.isAssignableFrom(PlaylistInsertViewModel::class.java)) {
-                return PlaylistInsertViewModel(playlistRepository) as T
+            if(modelClass.isAssignableFrom(PlaylistManageViewModel::class.java)) {
+                return PlaylistManageViewModel(playlistRepository) as T
             }
             throw IllegalAccessException()
         }

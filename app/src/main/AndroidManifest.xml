@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SimplePlayer">
         <activity
-            android:name=".activities.PlaylistInsertActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.PlaylistManageActivity"
             android:exported="false" />
         <activity
