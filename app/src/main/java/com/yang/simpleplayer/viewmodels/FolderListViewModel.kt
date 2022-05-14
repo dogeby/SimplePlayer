@@ -24,7 +24,7 @@ class FolderListViewModel(private val folderRepository: FolderRepository):ViewMo
 
     class FolderListViewModelFactory(private val folderRepository: FolderRepository):
             ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(FolderListViewModel::class.java)){
                 return FolderListViewModel(folderRepository) as T
             }

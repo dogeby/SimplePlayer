@@ -40,7 +40,7 @@ class PlayerViewModel (private val repository: VideoRepository, private val play
 
     class PlayerViewModelFactory(private val videoRepo: VideoRepository, private val player:Player):
         ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(PlayerViewModel::class.java)){
                 return PlayerViewModel(videoRepo, player) as T
             }

@@ -41,7 +41,7 @@ class PlaylistViewModel(private val playlistRepository: PlaylistRepository): Vie
 
     class PlaylistViewModelFactory(private val playlistRepository: PlaylistRepository):
             ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(PlaylistViewModel::class.java)) {
                 return PlaylistViewModel(playlistRepository) as T
             }

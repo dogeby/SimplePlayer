@@ -51,7 +51,7 @@ class VideoListViewModel(private val videoRepository: VideoRepository, private v
 
     class VideoListViewModelFactory(private val videoRepo:VideoRepository, private val playlistRepo:PlaylistRepository):
             ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(VideoListViewModel::class.java)) {
                 return VideoListViewModel(videoRepo, playlistRepo) as T
             }

@@ -46,7 +46,7 @@ class RecentListViewModel(private val videoRepository: VideoRepository): ViewMod
     }
 
     class RecentListViewModelFactory(private val videoRepository: VideoRepository):ViewModelProvider.Factory{
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(RecentListViewModel::class.java)) {
                 return RecentListViewModel(videoRepository) as T
             }
