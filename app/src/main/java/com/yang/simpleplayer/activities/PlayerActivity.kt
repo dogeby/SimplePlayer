@@ -3,12 +3,15 @@ package com.yang.simpleplayer.activities
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.databinding.ActivityPlayerBinding
 import com.yang.simpleplayer.models.VideoInfo
@@ -23,6 +26,8 @@ class PlayerActivity : AppCompatActivity() {
     private val viewModel: PlayerViewModel get() = requireNotNull(_viewModel)
     private var _player: Player? = null
     private val player: Player get() = requireNotNull(_player)
+    private var _playerView:StyledPlayerView? = null
+    private val playerView:StyledPlayerView get() = requireNotNull(_playerView)
     private val videoIdsKey = "videoIds"
     private val videoIdKey = "videoId"
 
@@ -53,11 +58,14 @@ class PlayerActivity : AppCompatActivity() {
         player.stop()
         player.release()
         _player = null
-        binding.playerView.player = null
+        playerView.player = null
         super.onDestroy()
     }
 
     private fun initUi() {
+        _playerView = layoutInflater.inflate(R.layout.view_btn_player, null) as StyledPlayerView?
+        binding.playerContainer.addView(playerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        // TODO: 설정에서 컨트롤뷰 테마 바꿀수있게 만들기
         val videoIds = intent.getLongArrayExtra(videoIdsKey)
         val currentVideoId = intent.getLongExtra(videoIdKey, 0L)
 //        viewModel.progressVisible.observe(this) { progressVisible ->
@@ -67,7 +75,7 @@ class PlayerActivity : AppCompatActivity() {
             showToastMessage(exceptionMessageResId.toInt())
         }
         viewModel.isSetVideo.observe(this) {
-            this.player.attachStyledPlayerView(binding.playerView)
+            this.player.attachStyledPlayerView(playerView)
             this.player.prepare()
             this.player.play()
         }

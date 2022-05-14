@@ -48,6 +48,9 @@ class PlaylistManageActivity : AppCompatActivity(),FragmentNeeds{
                 .add(binding.recyclerViewContainer.id, playlistListFragment).commit()
         }
         videoIds = intent.getLongArrayExtra(videoIdsKey) ?: LongArray(0)
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onStart() {
