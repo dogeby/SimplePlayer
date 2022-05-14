@@ -55,7 +55,7 @@ class RecentVideoListFragment : Fragment() {
                  */
                 val moreBtnStrArr = mutableListOf<String>()
                 val callbacks = mutableListOf<()->Unit>()
-                moreBtnStrArr.add(getString(R.string.videoAddToPlaylist))
+                moreBtnStrArr.add(getString(R.string.addToPlaylist))
                 callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))}
                 moreBtnStrArr.add(getString(R.string.videoDeleteFromRecentList))
                 callbacks.add {

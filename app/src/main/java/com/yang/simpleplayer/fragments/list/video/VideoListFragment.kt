@@ -56,7 +56,7 @@ class VideoListFragment : Fragment() {
                  */
                 val moreBtnStrArr = mutableListOf<String>()
                 val callbacks = mutableListOf<()->Unit>()
-                moreBtnStrArr.add(getString(R.string.videoAddToPlaylist))
+                moreBtnStrArr.add(getString(R.string.addToPlaylist))
                 callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))}
                 if(source is Long) {
                     moreBtnStrArr.add(getString(R.string.videoDeleteFromPlaylist))

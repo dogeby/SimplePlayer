@@ -7,16 +7,17 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ViewFolderItemBinding
+import com.yang.simpleplayer.models.Folder
 import com.yang.simpleplayer.utils.Format
 
 class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolder>(), Filterable {
 
-    private val folders = mutableListOf<String>()
-    private val filteredFolders = mutableListOf<String>()
+    private val folders = mutableListOf<Folder>()
+    private val filteredFolders = mutableListOf<Folder>()
     var itemViewOnclick: (String) -> Unit = {}
-    var moreBtnOnclick: (String) -> Unit = {}
+    var moreBtnOnclick: (Folder) -> Unit = {}
 
-    fun updateFolders(folders: List<String>) {
+    fun updateFolders(folders: List<Folder>) {
         filteredFolders.clear()
         filteredFolders.addAll(folders)
         this.folders.clear()
@@ -49,10 +50,10 @@ class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolde
                 folders
             }
             else {
-                val filteringFolders = mutableListOf<String>()
-                folders.forEach { folderName ->
-                    if(Format.getParentFolderName(folderName).lowercase().contains(constraintString))
-                        filteringFolders.add(folderName)
+                val filteringFolders = mutableListOf<Folder>()
+                folders.forEach { folder ->
+                    if(Format.getParentFolderName(folder.name).lowercase().contains(constraintString))
+                        filteringFolders.add(folder)
                 }
                 filteringFolders
             }
@@ -60,7 +61,7 @@ class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolde
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             filteredFolders.clear()
-            filteredFolders.addAll(results?.values as MutableList<String>)
+            filteredFolders.addAll(results?.values as MutableList<Folder>)
             notifyDataSetChanged()
         }
     }
@@ -69,10 +70,10 @@ class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolde
         private val name = binding.name
         private val moreBtn = binding.moreBtn
 
-        fun bind(item: String) {
-            name.text = Format.getParentFolderName(item)
+        fun bind(item: Folder) {
+            name.text = Format.getParentFolderName(item.name)
             itemView.setOnClickListener {
-                itemViewOnclick(item)
+                itemViewOnclick(item.name)
             }
             moreBtn.setOnClickListener { moreBtnOnclick(item) }
         }

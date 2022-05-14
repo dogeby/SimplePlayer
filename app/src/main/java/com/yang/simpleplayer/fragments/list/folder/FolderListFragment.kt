@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
+import com.yang.simpleplayer.common.MoreDialogFactory
 import com.yang.simpleplayer.databinding.FragmentFolderListBinding
 import com.yang.simpleplayer.viewmodels.FolderListViewModel
 
@@ -31,12 +33,22 @@ class FolderListFragment : Fragment() {
     private fun initUi() {
         val adapter = FolderListAdapter().apply {
             itemViewOnclick = (activity as FragmentNeeds)::startVideoListFragment
-            moreBtnOnclick = { }
-            // TODO: morebtn 작성
+            moreBtnOnclick = { folder ->
+                /**
+                 * folder more 버튼 클릭 시
+                 * 플레이리스트에 동영상들 추가
+                 */
+                val moreBtnStrArr = mutableListOf<String>()
+                val callbacks = mutableListOf<()->Unit>()
+                moreBtnStrArr.add(getString(R.string.addToPlaylist))
+                val videoIds = LongArray(folder.videoIds.size) {folder.videoIds[it]}
+                callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(videoIds)}
+                context?.let { MoreDialogFactory.create(it, moreBtnStrArr.toTypedArray(), *callbacks.toTypedArray()).show() }
+            }
         }
         binding.folderList.adapter = adapter
 
-        viewModel.folderNames.observe(viewLifecycleOwner) { folders ->
+        viewModel.folders.observe(viewLifecycleOwner) { folders ->
             adapter.updateFolders(folders)
         }
 //        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
