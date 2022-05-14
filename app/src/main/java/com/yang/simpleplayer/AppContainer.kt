@@ -19,29 +19,24 @@ class AppContainer(context:Context) {
     val playlistRepository = PlaylistRepository(appDatabase.playlistDbDao(), appDatabase.videoInfoDbDao())
     init {
         GlobalScope.launch(Dispatchers.IO) {
-            checkInvalidPlaylistVideoInfoCrossRef()
-            checkInvalidVideoInfo()
+            checkInvalidData()
         }
     }
 
-    private suspend fun checkInvalidPlaylistVideoInfoCrossRef() {
+    private suspend fun checkInvalidData() {
         val playlistDbDao = appDatabase.playlistDbDao()
-        val playlistVideoInfoCrossRefs = playlistDbDao.getAllPlaylistVideoInfoCrossRef()
         val videos = videoDao.getVideos()
         val videoHashSet = HashSet<Long>()
         videos.forEach { videoHashSet.add(it.id) }
+        //checkInvalidPlaylistVideoInfoCrossRef
+        val playlistVideoInfoCrossRefs = playlistDbDao.getAllPlaylistVideoInfoCrossRef()
         playlistVideoInfoCrossRefs.forEach { playlistVideoInfoCrossRef ->
             if(!videoHashSet.contains(playlistVideoInfoCrossRef.videoId)) {
                 playlistDbDao.deletePlayListVideoInfoCrossRef(playlistVideoInfoCrossRef.videoId)
             }
         }
-    }
-
-    private suspend fun checkInvalidVideoInfo() {
+        //checkInvalidVideoInfo
         val videosInfo = videoRepository.getAllVideoInfo()
-        val videos = videoDao.getVideos()
-        val videoHashSet = HashSet<Long>()
-        videos.forEach { videoHashSet.add(it.id) }
         videosInfo.forEach { videoInfo ->
             if(!videoHashSet.contains(videoInfo.videoId)) {
                 videoRepository.delete(videoInfo)

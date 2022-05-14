@@ -15,7 +15,7 @@ import com.yang.simpleplayer.databinding.FragmentPlaylistListBinding
 import com.yang.simpleplayer.models.PlaylistWithVideoInfo
 import com.yang.simpleplayer.viewmodels.PlaylistViewModel
 
-open class PlaylistListFragment : Fragment() {
+class PlaylistListFragment : Fragment() {
 
     private var _viewModel:PlaylistViewModel? = null
     val viewModel:PlaylistViewModel get() = requireNotNull(_viewModel)

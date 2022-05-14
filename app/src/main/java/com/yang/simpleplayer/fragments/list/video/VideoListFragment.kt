@@ -14,6 +14,7 @@ import com.yang.simpleplayer.common.MoreDialogFactory
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.viewmodels.VideoListViewModel
 
+// TODO: 플레이 리스트 동영상 이름순 정렬인거 해결
 class VideoListFragment : Fragment() {
 
     private var _binding: FragmentVideoListBinding? = null
