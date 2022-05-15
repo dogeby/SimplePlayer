@@ -14,6 +14,9 @@ interface PlaylistDbDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertPlaylistVideoInfoCrossRef(playlistVideoInfoCrossRef: PlaylistVideoInfoCrossRef)
 
+    @Update
+    fun updatePlaylist(playlist:Playlist)
+
     @Delete
     fun deletePlaylist(playlist: Playlist)
 

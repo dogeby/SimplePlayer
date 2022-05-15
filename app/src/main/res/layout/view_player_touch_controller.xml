@@ -24,44 +24,29 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/translucent_25"/>
-
-    <FrameLayout android:id="@id/exo_bottom_bar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="@dimen/exo_styled_bottom_bar_margin_top"
-        android:layout_gravity="bottom"
-        android:background="@android:color/transparent"
-        android:layoutDirection="ltr">
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layoutDirection="ltr"
-            android:layout_gravity="center_vertical|start">
-
-            <ImageButton android:id="@id/exo_prev"
-                style="@style/ExoStyledControls.Button.Center.Previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
+            android:orientation="horizontal">
             <TextView android:id="@id/exo_position"
                 style="@style/ExoStyledControls.TimeText.Position"/>
-
-            <View android:id="@id/exo_progress_placeholder"
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginBottom="8dp"/>
-
+                android:text="@string/slash"
+                android:textColor="@color/white"/>
             <TextView android:id="@id/exo_duration"
                 style="@style/ExoStyledControls.TimeText.Duration"/>
-
-            <ImageButton android:id="@id/exo_next"
-                style="@style/ExoStyledControls.Button.Center.Next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
-
-    </FrameLayout>
+        <View android:id="@id/exo_progress_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@id/exo_center_controls"
@@ -71,26 +56,31 @@
         android:background="@android:color/transparent"
         android:padding="@dimen/exo_styled_controls_padding"
         android:clipToPadding="false">
-        <Button android:id="@+id/exo_rew_with_amount"
+        <ImageButton android:id="@id/exo_prev"
+            style="@style/ExoStyledControls.Button.Center.Previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/exo_play_pause"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/ExoStyledControls.Button.Center.RewWithAmount"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageButton android:id="@id/exo_play_pause"
-            app:layout_constraintLeft_toRightOf="@id/exo_rew_with_amount"
-            app:layout_constraintRight_toLeftOf="@id/exo_ffwd_with_amount"
+            app:layout_constraintLeft_toRightOf="@id/exo_prev"
+            app:layout_constraintRight_toLeftOf="@id/exo_next"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             style="@style/ExoStyledControls.Button.Center.PlayPause"/>
 
-        <Button android:id="@+id/exo_ffwd_with_amount"
+
+        <ImageButton android:id="@id/exo_next"
+            style="@style/ExoStyledControls.Button.Center.Next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toRightOf="@id/exo_play_pause"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/ExoStyledControls.Button.Center.FfwdWithAmount"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </merge>

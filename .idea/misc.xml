@@ -36,10 +36,13 @@
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_default_player.xml" value="0.2672239108409321" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_folder_item.xml" value="0.2692502532928065" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_folder_list_item.xml" value="0.348731884057971" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_player_btn_controller.xml" value="0.3523550724637681" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_player_touch_controller.xml" value="0.3523550724637681" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_playlist_item.xml" value="0.348731884057971" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_recent_item.xml" value="0.23233695652173914" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_recent_list_item.xml" value="0.348731884057971" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_recent_video_item.xml" value="0.38645833333333335" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_touch_player.xml" value="0.3523550724637681" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_video_item.xml" value="0.23233695652173914" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.184" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.184" />

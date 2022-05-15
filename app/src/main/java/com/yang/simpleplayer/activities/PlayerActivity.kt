@@ -17,6 +17,7 @@ import com.yang.simpleplayer.databinding.ActivityPlayerBinding
 import com.yang.simpleplayer.models.VideoInfo
 import com.yang.simpleplayer.utils.Player
 import com.yang.simpleplayer.viewmodels.PlayerViewModel
+import com.yang.simpleplayer.views.PlayerView
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -63,7 +64,9 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initUi() {
-        _playerView = layoutInflater.inflate(R.layout.view_btn_player, null) as StyledPlayerView?
+        //_playerView = layoutInflater.inflate(R.layout.view_btn_player, null) as StyledPlayerView?
+        _playerView = layoutInflater.inflate(R.layout.view_touch_player, null) as StyledPlayerView?
+        (playerView as PlayerView).ableDoubleTabEvent()
         binding.playerContainer.addView(playerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         // TODO: 설정에서 컨트롤뷰 테마 바꿀수있게 만들기
         val videoIds = intent.getLongArrayExtra(videoIdsKey)
