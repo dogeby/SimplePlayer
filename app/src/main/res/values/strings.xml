@@ -9,12 +9,14 @@
     <string name="cancel">취소</string>
     <string name="edit_playlist_name">재생목록 이름을 지정하세요.</string>
     <string name="name_duplicate">동일한 이름의 재생목록이 존재합니다.</string>
+    <string name="slash">/</string>
     <!-- more Btn 문자열 -->
     <string name="addToPlaylist">재생목록에 추가하기</string>
     <string name="videoDeleteFromPlaylist">이 재생목록에서 삭제하기</string>
     <string name="videoDeleteFromRecentList">최근 기록에서 삭제하기</string>
     <string-array name="playlist_manage_more_btn_arr">
-        <item>플레이리스트 삭제</item>
+        <item>재생목록 이름 수정</item>
+        <item>재생목록 삭제</item>
     </string-array>
     <!-- Exception Message-->
     <string name="empty_video_exception">동영상을 찾을 수 없습니다.</string>

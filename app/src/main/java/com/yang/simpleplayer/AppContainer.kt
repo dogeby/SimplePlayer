@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-// TODO: checkInvalidVideoInfo 작동 체크 필요
 class AppContainer(context:Context) {
     private val appDatabase = AppDatabase.getDatabase(context)
     private val videoDao = VideoDao(context)
