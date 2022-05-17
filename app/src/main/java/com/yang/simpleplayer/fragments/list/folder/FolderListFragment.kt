@@ -40,7 +40,7 @@ class FolderListFragment : Fragment() {
                  */
                 val moreBtnStrArr = mutableListOf<String>()
                 val callbacks = mutableListOf<()->Unit>()
-                moreBtnStrArr.add(getString(R.string.addToPlaylist))
+                moreBtnStrArr.add(getString(R.string.add_to_playlist))
                 val videoIds = LongArray(folder.videoIds.size) {folder.videoIds[it]}
                 callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(videoIds)}
                 context?.let { MoreDialogFactory.create(it, moreBtnStrArr.toTypedArray(), *callbacks.toTypedArray()).show() }

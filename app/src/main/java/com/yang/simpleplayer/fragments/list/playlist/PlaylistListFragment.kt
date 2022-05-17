@@ -1,6 +1,8 @@
 package com.yang.simpleplayer.fragments.list.playlist
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +48,39 @@ class PlaylistListFragment : Fragment() {
     private fun initUi() {
         _adapter = PlaylistListAdapter()
         binding.playlistList.adapter = adapter
+
+        val editNameAlertDialog = { title:String, positiveBtnListener:(String)->Unit -> //플레이리스트 이름 관련 AlertDialog
+            val builder = context?.let { AlertDialog.Builder(it).apply { setTitle(title) } }
+            val dialogAddPlaylistBinding = DialogPlaylistNameBinding.inflate(layoutInflater)
+            builder?.setView(dialogAddPlaylistBinding.root)
+                ?.setPositiveButton(R.string.add) {_, _ -> positiveBtnListener(dialogAddPlaylistBinding.playlistNameEt.text.toString())}
+                ?.setNegativeButton(R.string.cancel){_, _ ->}
+            val dialog = builder?.create()?.apply { show() }
+            dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+            dialogAddPlaylistBinding.playlistNameEt.addTextChangedListener(object:TextWatcher{
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    if(s?.isBlank() == true) {
+                        dialogAddPlaylistBinding.playlistNameTextInputLayout.error = getString(R.string.blank_playlist_name_exception)
+                        dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+                    } else {
+                        viewModel.isSameNamePlaylist(Playlist(s.toString())){ isSameNamePlaylist ->
+                            if(isSameNamePlaylist) {
+                                dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+                                dialogAddPlaylistBinding.playlistNameTextInputLayout.error = getString(R.string.name_duplicate_exception)
+                            } else {
+                                dialogAddPlaylistBinding.playlistNameTextInputLayout.error = ""
+                                dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = true
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        binding.addPlaylist.setOnClickListener{editNameAlertDialog(getString(R.string.add_playlist)) {inputPlaylistName ->
+            viewModel.insertPlaylist(Playlist(inputPlaylistName))} }
+
         setItemOnClickListener((activity as FragmentNeeds)::startVideoListFragment)
 
         setMoreBtnOnClickListener { playlistWithVideoInfo ->
@@ -56,16 +91,9 @@ class PlaylistListFragment : Fragment() {
              */
             val callbacks = mutableListOf<()->Unit>()
             callbacks.add{  //플레이리스트 수정
-                    val builder = context?.let { AlertDialog.Builder(it) }
-                    val dialogAddPlaylistBinding = DialogPlaylistNameBinding.inflate(layoutInflater)
-                    builder?.setView(dialogAddPlaylistBinding.root)
-                        ?.setPositiveButton(R.string.ok){ _, _ ->
-                            dialogAddPlaylistBinding.playlistNameEt.hint = playlistWithVideoInfo.playlist.name
-                            val inputPlaylistName = dialogAddPlaylistBinding.playlistNameEt.text.toString()
-                            viewModel.updatePlaylist(Playlist(playlistWithVideoInfo.playlist.playlistId, inputPlaylistName))
-                        }
-                        ?.setNegativeButton(R.string.cancel){_, _ ->}
-                builder?.show()
+                editNameAlertDialog(resources.getStringArray(R.array.playlist_manage_more_btn_arr)[0]) {inputPlaylistName ->
+                    viewModel.updatePlaylist(Playlist(playlistWithVideoInfo.playlist.playlistId, inputPlaylistName))
+                }
             }
             callbacks.add { //플레이리스트 삭제
                 viewModel.deletePlaylist(playlistWithVideoInfo.playlist)
@@ -77,12 +105,8 @@ class PlaylistListFragment : Fragment() {
         viewModel.playlistsWithVideoInfo.observe(viewLifecycleOwner) { playlistsWithVideoInfo ->
             adapter.updatePlaylists(playlistsWithVideoInfo)
         }
-
         viewModel.doListUpdate.observe(viewLifecycleOwner) { doListUpdate ->
             if(doListUpdate) viewModel.list()
-        }
-        viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->  //플레이리스트 이름 중복 시 에러 메시지 출력
-            (activity as FragmentNeeds).showToastMessage(exceptionMessageResId)
         }
         (activity as FragmentNeeds).setRefreshListener { viewModel.list() }
         (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{

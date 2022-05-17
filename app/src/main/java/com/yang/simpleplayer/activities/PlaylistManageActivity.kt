@@ -2,15 +2,11 @@ package com.yang.simpleplayer.activities
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.ActivityPlaylistManageBinding
-import com.yang.simpleplayer.databinding.DialogPlaylistNameBinding
 import com.yang.simpleplayer.fragments.list.playlist.PlaylistListFragment
-import com.yang.simpleplayer.models.Playlist
 import com.yang.simpleplayer.models.PlaylistVideoInfoCrossRef
 
 class PlaylistManageActivity : AppCompatActivity(),FragmentNeeds{
@@ -54,17 +50,6 @@ class PlaylistManageActivity : AppCompatActivity(),FragmentNeeds{
                 finish()
             }
         }
-        binding.addPlaylist.setOnClickListener {    //플레이리스트 추가 버튼 클릭 시 다이어그램 보여주기
-                val builder = AlertDialog.Builder(this)
-                val dialogAddPlaylistBinding = DialogPlaylistNameBinding.inflate(layoutInflater)
-                builder.setView(dialogAddPlaylistBinding.root)
-                    .setPositiveButton(R.string.ok){ _, _ ->
-                        val inputPlaylistName = dialogAddPlaylistBinding.playlistNameEt.text.toString()
-                        playlistListFragment.viewModel.insertPlaylist(Playlist(inputPlaylistName))
-                    }
-                    .setNegativeButton(R.string.cancel){_, _ ->}
-                builder.show()
-            }
     }
 
     override fun showToastMessage(resId:Int) {

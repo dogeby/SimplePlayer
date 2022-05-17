@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(it)
             builder.apply {
                 setMessage(R.string.permission_message)
-                setPositiveButton(R.string.ok) { _, _ ->
+                setPositiveButton(R.string.accept) { _, _ ->
                     requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                 }
                 setNegativeButton(R.string.finish) { _, _ ->

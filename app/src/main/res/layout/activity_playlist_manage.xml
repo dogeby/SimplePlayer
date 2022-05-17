@@ -29,15 +29,6 @@
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_baseline_keyboard_backspace_36"
                     android:visibility="visible"/>
-                <ImageButton
-                    android:id="@+id/addPlaylist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_gravity="right"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_baseline_playlist_add_48"
-                    tools:ignore="SpeakableTextPresentCheck" />
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
