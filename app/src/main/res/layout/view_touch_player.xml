@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yang.simpleplayer.views.PlayerView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/playerView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    app:controller_layout_id="@layout/view_player_touch_controller"
-    app:auto_show="false"
-    tools:ignore="MissingDefaultResource" />
+    android:layout_height="match_parent">
+    <com.yang.simpleplayer.views.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        app:controller_layout_id="@layout/view_player_touch_controller"
+        app:auto_show="false"
+        tools:ignore="MissingDefaultResource" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/touchViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <TextView android:id="@+id/rewWithAmount"
+            android:layout_gravity="center_vertical|start"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="40dp"
+            android:visibility="invisible"
+            style="@style/ExoStyledControls.Button.Center.RewWithAmount"/>
+        <TextView android:id="@+id/ffwdWithAmount"
+            android:layout_gravity="center_vertical|end"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="40dp"
+            android:visibility="invisible"
+            style="@style/ExoStyledControls.Button.Center.FfwdWithAmount"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

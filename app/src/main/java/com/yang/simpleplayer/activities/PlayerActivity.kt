@@ -3,7 +3,6 @@ package com.yang.simpleplayer.activities
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,9 +10,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.databinding.ActivityPlayerBinding
+import com.yang.simpleplayer.databinding.ViewTouchPlayerBinding
 import com.yang.simpleplayer.models.VideoInfo
 import com.yang.simpleplayer.utils.Player
 import com.yang.simpleplayer.viewmodels.PlayerViewModel
@@ -65,9 +64,10 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun initUi() {
         //_playerView = layoutInflater.inflate(R.layout.view_btn_player, null) as StyledPlayerView?
-        _playerView = layoutInflater.inflate(R.layout.view_touch_player, null) as StyledPlayerView?
-        (playerView as PlayerView).ableDoubleTabEvent()
-        binding.playerContainer.addView(playerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val touchPlayerBinding = ViewTouchPlayerBinding.inflate(layoutInflater)
+        _playerView = touchPlayerBinding.playerView
+        (playerView as PlayerView).ableDoubleTabEvent(touchPlayerBinding.rewWithAmount, touchPlayerBinding.ffwdWithAmount, touchPlayerBinding.touchViewContainer)
+        binding.playerContainer.addView(touchPlayerBinding.root)
         // TODO: 설정에서 컨트롤뷰 테마 바꿀수있게 만들기
         val videoIds = intent.getLongArrayExtra(videoIdsKey)
         val currentVideoId = intent.getLongExtra(videoIdKey, 0L)
