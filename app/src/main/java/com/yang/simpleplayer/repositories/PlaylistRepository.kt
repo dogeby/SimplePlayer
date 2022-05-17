@@ -22,6 +22,8 @@ class PlaylistRepository(private val playlistDbDao: PlaylistDbDao, private val v
         playlistDbDao.insertPlaylistVideoInfoCrossRef(playlistVideoInfoCrossRef)
     }
 
+    fun updatePlaylist(playlist:Playlist) = playlistDbDao.updatePlaylist(playlist)
+
     fun deletePlaylist(playlist: Playlist) {
         playlistDbDao.deletePlaylist(playlist)
         playlistDbDao.deletePlaylistVideoInfoCrossRef(playlist.playlistId)
