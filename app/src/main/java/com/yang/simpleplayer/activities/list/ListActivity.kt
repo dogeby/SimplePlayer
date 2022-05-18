@@ -87,7 +87,7 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
             }
             override fun onTabSelected(tab: TabLayout.Tab?) { tab?.let { listener(it) }}
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                if(tab?.position == 0) tab?.setIcon(R.drawable.ic_outline_folder_48_black)
+                if(tab?.position == 0) tab.setIcon(R.drawable.ic_outline_folder_48_black)
             }
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 tab?.let { listener(it) }}

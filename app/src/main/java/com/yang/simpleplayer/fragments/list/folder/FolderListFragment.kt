@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
@@ -20,7 +22,11 @@ class FolderListFragment : Fragment() {
     private val binding: FragmentFolderListBinding get() = requireNotNull(_binding)
     private var _viewModel: FolderListViewModel? = null
     private val viewModel: FolderListViewModel get() = requireNotNull(_viewModel)
-
+    private val emptyView:TextView by lazy {
+        (layoutInflater.inflate(R.layout.view_empty_list, null) as TextView).apply {
+            setText(R.string.empty_folderList)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val folderRepository = ( activity?.application as SimplePlayerApplication).appContainer.folderRepository
@@ -48,7 +54,15 @@ class FolderListFragment : Fragment() {
         }
         binding.folderList.adapter = adapter
 
+        val rootViewSize = binding.root.size
         viewModel.folders.observe(viewLifecycleOwner) { folders ->
+            if(folders.isNotEmpty()) {
+                if(binding.root.size > rootViewSize) binding.root.removeView(emptyView)
+                adapter.updateFolders(folders)
+
+            } else if(binding.root.size == rootViewSize) {  //리스트가 비어있는 경우
+                binding.root.addView(emptyView)
+            }
             adapter.updateFolders(folders)
         }
 //        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->

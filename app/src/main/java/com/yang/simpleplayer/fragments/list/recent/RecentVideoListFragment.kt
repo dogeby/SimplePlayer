@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
@@ -19,13 +21,17 @@ import com.yang.simpleplayer.viewmodels.RecentListViewModel
  * 임시로 videoAdapter, videoListBinding사용
  */
 // TODO: 날짜 넣을수있는 어뎁터 작성 필요
-// TODO: 최근 비디오 비어있으면 비었다는 뷰 띄우기
 class RecentVideoListFragment : Fragment() {
 
     private var _binding: FragmentVideoListBinding? = null
     private val binding: FragmentVideoListBinding get() = requireNotNull(_binding)
     private var _viewModel: RecentListViewModel? = null
     private val viewModel: RecentListViewModel get() = requireNotNull(_viewModel)
+    private val emptyView: TextView by lazy {
+        (layoutInflater.inflate(R.layout.view_empty_list, null) as TextView).apply {
+            setText(R.string.empty_recentList)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +73,15 @@ class RecentVideoListFragment : Fragment() {
         }
         binding.videoList.adapter = adapter
 
+        val rootViewSize = binding.root.size
         viewModel.videos.observe(viewLifecycleOwner) { videos ->
+            if(videos.isNotEmpty()) {
+                if(binding.root.size > rootViewSize) binding.root.removeView(emptyView)
+                adapter.updateVideos(videos)
+
+            } else if(binding.root.size == rootViewSize) {  //리스트가 비어있는 경우
+                binding.root.addView(emptyView)
+            }
             adapter.updateVideos(videos)
         }
 //        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->

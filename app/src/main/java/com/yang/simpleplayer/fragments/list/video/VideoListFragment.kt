@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
@@ -25,6 +27,11 @@ class VideoListFragment : Fragment() {
     private val source: Any get() = requireNotNull(_source)
     private val folderNameKey = "folderName"
     private val playlistIdKey = "playlistId"
+    private val emptyView: TextView by lazy {    //폴더리스트는 동영상이 있어야 폴더로 나타나기 때문에 플레이리스트 비어있는 경우만 고려
+        (layoutInflater.inflate(R.layout.view_empty_list, null) as TextView).apply {
+            setText(R.string.empty_playlist)
+        }
+    }
 
     // TODO: source any인거 바꾸기
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -70,7 +77,15 @@ class VideoListFragment : Fragment() {
         }
         binding.videoList.adapter = adapter
 
+        val rootViewSize = binding.root.size
         viewModel.videos.observe(viewLifecycleOwner) { videos ->
+            if(videos.isNotEmpty()) {
+                if(binding.root.size > rootViewSize) binding.root.removeView(emptyView)
+                adapter.updateVideos(videos)
+
+            } else if(binding.root.size == rootViewSize) {  //리스트가 비어있는 경우
+                binding.root.addView(emptyView)
+            }
             adapter.updateVideos(videos)
         }
 //        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->

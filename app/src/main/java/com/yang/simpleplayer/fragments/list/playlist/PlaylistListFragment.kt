@@ -6,8 +6,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.yang.simpleplayer.R
@@ -28,6 +30,11 @@ class PlaylistListFragment : Fragment() {
     val binding:FragmentPlaylistListBinding get() =  requireNotNull(_binding)
     private var _adapter:PlaylistListAdapter? = null
     private val adapter:PlaylistListAdapter get() = requireNotNull(_adapter)
+    private val emptyView:TextView by lazy {
+        (layoutInflater.inflate(R.layout.view_empty_list, null) as TextView).apply {
+            setText(R.string.empty_playlistList)
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -102,7 +109,15 @@ class PlaylistListFragment : Fragment() {
             context?.let { MoreDialogFactory.create(it, R.array.playlist_manage_more_btn_arr, *callbacks.toTypedArray()).show() }
         }
 
+        val rootViewSize = binding.root.size
         viewModel.playlistsWithVideoInfo.observe(viewLifecycleOwner) { playlistsWithVideoInfo ->
+            if(playlistsWithVideoInfo.isNotEmpty()) {
+                if(binding.root.size > rootViewSize) binding.root.removeView(emptyView)
+                adapter.updatePlaylists(playlistsWithVideoInfo)
+
+            } else if(binding.root.size == rootViewSize) {  //리스트가 비어있는 경우
+                binding.root.addView(emptyView)
+            }
             adapter.updatePlaylists(playlistsWithVideoInfo)
         }
         viewModel.doListUpdate.observe(viewLifecycleOwner) { doListUpdate ->
