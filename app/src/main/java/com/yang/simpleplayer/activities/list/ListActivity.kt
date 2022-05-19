@@ -12,6 +12,7 @@ import com.google.android.material.tabs.TabLayout
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.PlayerActivity
 import com.yang.simpleplayer.activities.PlaylistManageActivity
+import com.yang.simpleplayer.activities.SettingsActivity
 import com.yang.simpleplayer.databinding.ActivityListBinding
 import com.yang.simpleplayer.fragments.list.folder.FolderListFragment
 import com.yang.simpleplayer.fragments.list.playlist.PlaylistListFragment
@@ -45,13 +46,16 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     private fun initUi() {
-        if(isDefault) addDefaultListFragment()
+        if(isDefault) {
+            isDefault = false
+            addDefaultListFragment()
+        }
         /**
          * 앱바 설정
          * SearchView name 검색기능, Settings Btn
          */
         binding.settings.setOnClickListener {
-            // TODO: Settings 버튼 클릭 리스너
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
         binding.searchBar.setOnSearchClickListener {
             binding.appbarTitle.visibility = View.GONE
@@ -180,14 +184,12 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
     }
 
     override fun startPlaylistManageActivity(videoIds: LongArray) {
-        isDefault = false
         Intent(this, PlaylistManageActivity::class.java).apply {
             putExtra(videoIdsKey, videoIds)
         }. run { startActivity(this) }
     }
 
     override fun startPlayerActivity(currentVideoId:Long, videoIds: LongArray) {
-        isDefault = false
         Intent(this, PlayerActivity::class.java).apply {
             putExtra(videoIdsKey, videoIds)
             putExtra(videoIdKey, currentVideoId)

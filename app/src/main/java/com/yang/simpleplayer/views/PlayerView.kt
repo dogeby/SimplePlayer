@@ -47,7 +47,6 @@ class PlayerView(context:Context, attrs: AttributeSet? = null): StyledPlayerView
             if(isDoubleTapOn) {
                 val currentPosition = player?.currentPosition ?: 0L
                 e?.x?.let {
-                    hideController()
                     if(it < this@PlayerView.width/2) {
                         player?.seekTo(currentPosition - rewindPositionMs)
                         fastForwardView?.clearAnimation()

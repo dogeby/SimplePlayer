@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.PreferenceCategory
+        android:icon="@drawable/ic_baseline_format_paint_24"
+        android:title="@string/thema">
+        <androidx.preference.Preference
+            android:fragment="com.yang.simpleplayer.fragments.preference.ControllerThemaPreferFragment"
+            android:key="@string/player_controller_thema_key"
+            android:title="@string/player_controller_thema" />
+    </androidx.preference.PreferenceCategory>
+</androidx.preference.PreferenceScreen>

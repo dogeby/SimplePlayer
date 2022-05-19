@@ -24,9 +24,20 @@
         <item>재생목록 이름 수정</item>
         <item>재생목록 삭제</item>
     </string-array>
+    <!-- 설정 -->
+    <string name="setting">설정</string>
+    <string name="thema">테마</string>
+    <string name="player">플레이어</string>
+    <string name="player_controller_thema_key">playerControllerThemaKey</string>
+    <string name="player_controller_thema">플레이어 컨트롤러 테마</string>
+    <string name="button_base_controller">버튼 기반 컨트롤러</string>
+    <string name="touch_base_controller">터치 기반 컨트롤러</string>
+    <string name="button_controller_summary">버튼을 통해 되감기, 빨리 감기를 할 수 있습니다.</string>
+    <string name="touch_controller_summary">더블 탭을 통해 되감기, 빨리 감기를 할 수 있습니다.</string>
     <!-- Exception Message-->
     <string name="empty_video_exception">동영상을 찾을 수 없습니다.</string>
     <string name="fail_load_video_exception">동영상을 불러오는데 실패했습니다.</string>
     <string name="name_duplicate_exception">동일한 이름의 재생목록이 존재합니다.</string>
     <string name="blank_playlist_name_exception">이름을 입력해주세요.</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>

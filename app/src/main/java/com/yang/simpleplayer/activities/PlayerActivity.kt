@@ -9,7 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.yang.simpleplayer.Preferences.thema.ControllerThema
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.databinding.ActivityPlayerBinding
 import com.yang.simpleplayer.databinding.ViewTouchPlayerBinding
@@ -17,6 +20,9 @@ import com.yang.simpleplayer.models.VideoInfo
 import com.yang.simpleplayer.utils.Player
 import com.yang.simpleplayer.viewmodels.PlayerViewModel
 import com.yang.simpleplayer.views.PlayerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -34,6 +40,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val videoRepo = (application as SimplePlayerApplication).appContainer.videoRepository
+        val userPreferencesRepo = (application as SimplePlayerApplication).appContainer.userPreferencesRepository
         _player = Player.Factory().build(this).apply {
             eventMediaItemTransitionCallback = { videoInfo: VideoInfo ->
                 viewModel.insertOrReplaceVideoInfo(videoInfo) }
@@ -43,7 +50,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         _binding = ActivityPlayerBinding.inflate(layoutInflater)
-        _viewModel = ViewModelProvider(this, PlayerViewModel.PlayerViewModelFactory(videoRepo, player)).get(PlayerViewModel::class.java)
+        _viewModel = ViewModelProvider(this, PlayerViewModel.PlayerViewModelFactory(videoRepo, userPreferencesRepo, player)).get(PlayerViewModel::class.java)
         hideSystemBars()
         initUi()
         setContentView(binding.root)
@@ -63,24 +70,36 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initUi() {
-        //_playerView = layoutInflater.inflate(R.layout.view_btn_player, null) as StyledPlayerView?
-        val touchPlayerBinding = ViewTouchPlayerBinding.inflate(layoutInflater)
-        _playerView = touchPlayerBinding.playerView
-        (playerView as PlayerView).ableDoubleTabEvent(touchPlayerBinding.rewWithAmount, touchPlayerBinding.ffwdWithAmount, touchPlayerBinding.touchViewContainer)
-        binding.playerContainer.addView(touchPlayerBinding.root)
-        // TODO: 설정에서 컨트롤뷰 테마 바꿀수있게 만들기
         val videoIds = intent.getLongArrayExtra(videoIdsKey)
         val currentVideoId = intent.getLongExtra(videoIdKey, 0L)
 //        viewModel.progressVisible.observe(this) { progressVisible ->
 //            setProgressBar(progressVisible)
 //        }
+        //설정 controller 테마에 따라 플레이어 controller 설정
+        lifecycleScope.launch(Dispatchers.IO) {
+            val userPreferences = viewModel.getUserPreferences()
+            withContext(Dispatchers.Main) {
+                when(userPreferences.controllerThema) {
+                    ControllerThema.BUTTON.ordinal -> {
+                        _playerView = layoutInflater.inflate(R.layout.view_btn_player, null) as StyledPlayerView?
+                        binding.playerContainer.addView(playerView)
+                    }
+                    ControllerThema.TOUCH.ordinal -> {
+                        val touchPlayerBinding = ViewTouchPlayerBinding.inflate(layoutInflater, binding.playerContainer, true)
+                        _playerView = touchPlayerBinding.playerView
+                        (playerView as PlayerView).ableDoubleTabEvent(touchPlayerBinding.rewWithAmount, touchPlayerBinding.ffwdWithAmount, touchPlayerBinding.touchViewContainer)
+                    }
+                }
+                viewModel.isSetVideo.observe(this@PlayerActivity) {
+                    player.attachStyledPlayerView(playerView)
+                    player.prepare()
+                    player.play()
+                }
+            }
+        }
+
         viewModel.exceptionMessageResId.observe(this) { exceptionMessageResId ->
             showToastMessage(exceptionMessageResId.toInt())
-        }
-        viewModel.isSetVideo.observe(this) {
-            this.player.attachStyledPlayerView(playerView)
-            this.player.prepare()
-            this.player.play()
         }
         viewModel.requestPlayer(currentVideoId, requireNotNull(videoIds))
     }

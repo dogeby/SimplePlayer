@@ -6,6 +6,7 @@
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/drawable-v24/news_avd_v02.xml" value="0.2095" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/drawable/ic_baseline_folder_48.xml" value="0.265" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/drawable/ic_baseline_folder_48_yellow.xml" value="0.4175" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/drawable/ic_baseline_format_paint_24.xml" value="0.1355" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/drawable/ic_baseline_play_circle_filled_240.xml" value="0.2125" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/drawable/ic_baseline_playlist_add_48.xml" value="0.391" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/drawable/ic_baseline_playlist_play_36_white.xml" value="0.2765" />
@@ -34,6 +35,8 @@
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/fragment_video_item.xml" value="0.36614583333333334" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/fragment_video_list.xml" value="0.23007246376811594" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/fragment_videos_list.xml" value="0.36614583333333334" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/preference_controller_thema.xml" value="0.3921875" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/settings_activity.xml" value="0.38315217391304346" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_btn_player.xml" value="0.2672239108409321" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_default_player.xml" value="0.2672239108409321" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_empty_list.xml" value="0.32518115942028986" />
@@ -49,6 +52,8 @@
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/layout/view_video_item.xml" value="0.23233695652173914" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.184" />
         <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.184" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/xml/controller_thema_preference.xml" value="0.3921875" />
+        <entry key="..\:/project/kotlin/SimplePlayer/app/src/main/res/xml/root_preferences.xml" value="0.38315217391304346" />
       </map>
     </option>
   </component>

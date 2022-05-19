@@ -25,5 +25,7 @@
 
     <style name="Theme.SimplePlayer.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.SimplePlayer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.SimplePlayer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
 </resources>

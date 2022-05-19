@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SimplePlayer">
         <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity
             android:name=".activities.PlaylistManageActivity"
             android:exported="false" />
         <activity

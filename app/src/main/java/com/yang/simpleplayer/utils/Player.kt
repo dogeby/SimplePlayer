@@ -13,7 +13,6 @@ import java.util.*
  * Bug: 지원하지 않는 비디오 때문에 next 또는 prev 넘어가지 못하는 버그 존재
  * lateinit 주의
  */
-// TODO:  mediaitemTransition event로 videoinfo를 처리했는데 mediaitem바뀌기전 처리해야하기 때문에 컨트롤뷰 커스텀해야할듯
 
 class Player(private val player:ExoPlayer) {
     private lateinit var videos:List<Video>
