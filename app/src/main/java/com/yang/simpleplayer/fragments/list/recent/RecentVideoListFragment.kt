@@ -14,13 +14,8 @@ import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.common.MoreDialogFactory
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
-import com.yang.simpleplayer.fragments.list.video.VideoListAdapter
 import com.yang.simpleplayer.viewmodels.RecentListViewModel
 
-/**
- * 임시로 videoAdapter, videoListBinding사용
- */
-// TODO: 날짜 넣을수있는 어뎁터 작성 필요
 class RecentVideoListFragment : Fragment() {
 
     private var _binding: FragmentVideoListBinding? = null
@@ -51,7 +46,7 @@ class RecentVideoListFragment : Fragment() {
     }
 
     private fun initUi() {
-        val adapter = VideoListAdapter().apply {
+        val adapter = RecentVideoListAdapter().apply {
             itemViewOnclick = (activity as FragmentNeeds)::startPlayerActivity
             moreBtnOnClick = { video ->
                 /**
@@ -74,15 +69,15 @@ class RecentVideoListFragment : Fragment() {
         binding.videoList.adapter = adapter
 
         val rootViewSize = binding.root.size
-        viewModel.videos.observe(viewLifecycleOwner) { videos ->
-            if(videos.isNotEmpty()) {
+        viewModel.recentVideoItems.observe(viewLifecycleOwner) { recentVideoItems ->
+            if(recentVideoItems.isNotEmpty()) {
                 if(binding.root.size > rootViewSize) binding.root.removeView(emptyView)
-                adapter.updateVideos(videos)
+                adapter.updateVideos(recentVideoItems)
 
             } else if(binding.root.size == rootViewSize) {  //리스트가 비어있는 경우
                 binding.root.addView(emptyView)
             }
-            adapter.updateVideos(videos)
+            adapter.updateVideos(recentVideoItems)
         }
 //        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
 //            (activity as FragmentNeeds).setProgressBar(progressVisible)

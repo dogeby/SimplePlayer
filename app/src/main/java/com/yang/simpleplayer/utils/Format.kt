@@ -1,5 +1,9 @@
 package com.yang.simpleplayer.utils
 
+import android.annotation.SuppressLint
+import java.text.SimpleDateFormat
+import java.util.*
+
 object Format {
     fun msToHourMinSecond(ms:Int): String {
         val seconds = ms / 1000 % 60
@@ -16,4 +20,13 @@ object Format {
 
     fun splitExtension(fileName:String) = fileName.substring(0, fileName.lastIndexOf('.'))
 
+    @SuppressLint("SimpleDateFormat")
+    fun dateToKorDate(date: Date):String {
+        val dateFormatIncludeYear = SimpleDateFormat("yyyy년 MM월 dd일")
+        val dateFormat = SimpleDateFormat("MM월 dd일")
+        val paramCalender = GregorianCalendar()
+        paramCalender.time = date
+        return if(paramCalender.get(Calendar.YEAR) == GregorianCalendar().get(Calendar.YEAR)) dateFormat.format(date)
+        else dateFormatIncludeYear.format(date)
+    }
 }

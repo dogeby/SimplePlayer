@@ -1,14 +1,18 @@
 package com.yang.simpleplayer.fragments.list.folder
 
+import android.content.ContentUris
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.databinding.ViewFolderItemBinding
 import com.yang.simpleplayer.models.Folder
 import com.yang.simpleplayer.utils.Format
+import com.yang.simpleplayer.utils.ImageLoader
 
 class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolder>(), Filterable {
 
@@ -69,12 +73,22 @@ class FolderListAdapter : RecyclerView.Adapter<FolderListAdapter.FolderViewHolde
     inner class FolderViewHolder(binding: ViewFolderItemBinding): RecyclerView.ViewHolder(binding.root) {
         private val name = binding.name
         private val moreBtn = binding.moreBtn
+        private val thumbnail = binding.thumbnail
+        private val folderSize = binding.folderSize
 
         fun bind(item: Folder) {
             name.text = Format.getParentFolderName(item.name)
             itemView.setOnClickListener {
                 itemViewOnclick(item.name)
             }
+
+            val uri = ContentUris.withAppendedId(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, item.videoIds[0]
+            )
+            ImageLoader.loadThumbnail(uri, thumbnail)
+            thumbnail.setBackgroundResource(R.color.white)
+            thumbnail.scaleType = ImageView.ScaleType.CENTER_CROP
+            folderSize.text = item.videoIds.size.toString()
             moreBtn.setOnClickListener { moreBtnOnclick(item) }
         }
     }

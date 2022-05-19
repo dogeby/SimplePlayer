@@ -13,5 +13,5 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="3"
-        tools:listitem="@layout/view_recent_video_item" />
+        tools:listitem="@layout/view_recent_date_item" />
 </FrameLayout>
