@@ -52,7 +52,9 @@ class VideoDao(private val context: Context) {
                         id
                     )
                     val relativePath = cursor.getString(relativePathColumn)
-                    videos.add(Video(id, contentUri, name, duration, relativePath))
+                    if(duration != 0) { //지원 안하는 동영상 방지용
+                        videos.add(Video(id, contentUri, name, duration, relativePath))
+                    }
                 }
             }
             return videos

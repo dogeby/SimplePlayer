@@ -23,8 +23,10 @@ class VideoListFragment : Fragment() {
     private val binding: FragmentVideoListBinding get() = requireNotNull(_binding)
     private var _viewModel: VideoListViewModel? = null
     private val viewModel: VideoListViewModel get() = requireNotNull(_viewModel)
-    private var _source: Any? = null
-    private val source: Any get() = requireNotNull(_source)
+    private var _folderNameSource: String? = null
+    private val folderNameSource: String get() = requireNotNull(_folderNameSource)
+    private var _playlistIdSource: Long? = null
+    private val playlistIdSource: Long get() = requireNotNull(_playlistIdSource)
     private val folderNameKey = "folderName"
     private val playlistIdKey = "playlistId"
     private val emptyView: TextView by lazy {    //폴더리스트는 동영상이 있어야 폴더로 나타나기 때문에 플레이리스트 비어있는 경우만 고려
@@ -32,14 +34,13 @@ class VideoListFragment : Fragment() {
             setText(R.string.empty_playlist)
         }
     }
-
-    // TODO: source any인거 바꾸기
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val videoRepo = (activity?.application as SimplePlayerApplication).appContainer.videoRepository
         val playlistRepo = (activity?.application as SimplePlayerApplication).appContainer.playlistRepository
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
         arguments?.let {
-            _source = it.getString(folderNameKey)?:it.getLong(playlistIdKey)
+            _folderNameSource = it.getString(folderNameKey)
+            _playlistIdSource = it.getLong(playlistIdKey, -1L)
         }
         _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo, playlistRepo)).get(VideoListViewModel::class.java)
         initUi()
@@ -49,7 +50,7 @@ class VideoListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         // TODO: RecyclerView 최적화 필요
-        viewModel.list(source)
+        requestList()
     }
 
     private fun initUi() {
@@ -65,11 +66,11 @@ class VideoListFragment : Fragment() {
                 val callbacks = mutableListOf<()->Unit>()
                 moreBtnStrArr.add(getString(R.string.add_to_playlist))
                 callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))}
-                if(source is Long) {
+                if(playlistIdSource == -1L) {
                     moreBtnStrArr.add(getString(R.string.video_delete_from_playlist))
                     callbacks.add {
-                        viewModel.deleteVideoFromPlaylist(video.id, source as Long)
-                        viewModel.list(source)
+                        viewModel.deleteVideoFromPlaylist(video.id, playlistIdSource as Long)
+                        requestList()
                     }
                 }
                 context?.let { MoreDialogFactory.create(it, moreBtnStrArr.toTypedArray(), *callbacks.toTypedArray()).show() }
@@ -94,7 +95,7 @@ class VideoListFragment : Fragment() {
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
             (activity as FragmentNeeds).showToastMessage(exceptionMessageResId.toInt())
         }
-        (activity as FragmentNeeds).setRefreshListener { viewModel.list(source) }
+        (activity as FragmentNeeds).setRefreshListener { requestList() }
         (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean { return false }
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -102,7 +103,15 @@ class VideoListFragment : Fragment() {
                 return false
             }
         })
-        viewModel.list(source)
+    }
+
+    private fun requestList() {
+        if(_folderNameSource != null) {
+            viewModel.list(folderNameSource)
+        }
+        if(playlistIdSource != -1L) {
+            viewModel.list(playlistIdSource)
+        }
     }
 
     override fun onDestroyView() {

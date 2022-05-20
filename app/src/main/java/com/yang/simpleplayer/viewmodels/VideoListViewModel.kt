@@ -22,17 +22,26 @@ class VideoListViewModel(private val videoRepository: VideoRepository, private v
     val videos = MutableLiveData<List<Video>>()
     val exceptionMessageResId = MutableLiveData<String>()
 
-    fun list(source:Any) {
+    fun list(source:Long) { //source: playlist id
         progressVisible.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
-
-            val videoList = if(source is String) {
-                videoRepository.getVideos(source)
-            } else {
-                val playlistWithVideoInfo = playlistRepository.getPlaylistWithVideoInfo(source as Long)
-                val ids = LongArray(playlistWithVideoInfo.videoInfo.size){playlistWithVideoInfo.videoInfo[it].videoId}
-                videoRepository.getVideos(ids)
+            val playlistWithVideoInfo = playlistRepository.getPlaylistWithVideoInfo(source)
+            val ids = LongArray(playlistWithVideoInfo.videoInfo.size){playlistWithVideoInfo.videoInfo[it].videoId}
+            val videoList = videoRepository.getVideos(ids)
+            videoList.forEach { video ->
+                videoRepository.getVideoInfo(video.id)?.let {
+                    video.videoInfo = it
+                }
             }
+            videos.postValue(videoList)
+            progressVisible.postValue(false)
+        }
+    }
+
+    fun list(source:String) {   //source: folder name
+        progressVisible.postValue(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            val videoList = videoRepository.getVideos(source)
             videoList.forEach { video ->
                 videoRepository.getVideoInfo(video.id)?.let {
                     video.videoInfo = it
