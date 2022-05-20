@@ -108,9 +108,7 @@ class RecentVideoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), 
             ImageLoader.loadThumbnail(video.contentUri, thumbnail)
             duration.text = Format.msToHourMinSecond(video.duration)
             itemView.setOnClickListener {
-                val ids = mutableListOf<Long>()
-                recentVideoItems.forEach { ids.add(it.video?.id!!) }
-                itemViewOnclick(video.id, ids.toLongArray())
+                itemViewOnclick(video.id, longArrayOf(video.id))
             }
             moreBtn.setOnClickListener { moreBtnOnClick(video) }
         }
