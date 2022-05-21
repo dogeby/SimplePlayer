@@ -21,7 +21,13 @@
             android:exported="false" />
         <activity
             android:name=".activities.PlayerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout"
+            android:supportsPictureInPicture="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=".activities.PlayerActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:autoRemoveFromRecents="true"
             android:exported="false"
             android:theme="@style/Theme.SimplePlayer" />
         <activity
@@ -30,7 +36,6 @@
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

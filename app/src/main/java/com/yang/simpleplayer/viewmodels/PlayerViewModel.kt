@@ -4,31 +4,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.yang.simpleplayer.models.PlayerPlaylist
 import com.yang.simpleplayer.models.VideoInfo
 import com.yang.simpleplayer.repositories.UserPreferencesRepository
 import com.yang.simpleplayer.repositories.VideoRepository
-import com.yang.simpleplayer.utils.Player
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class PlayerViewModel (private val videoRepository: VideoRepository, private val userPreferencesRepository: UserPreferencesRepository, private val player:Player):ViewModel() {
+class PlayerViewModel (private val videoRepository: VideoRepository, private val userPreferencesRepository: UserPreferencesRepository):ViewModel() {
 
     val progressVisible = MutableLiveData<Boolean>()
     val exceptionMessageResId = MutableLiveData<String>()
-    val isSetVideo = MutableLiveData<Boolean>()
+    val playerPlaylist = MutableLiveData<PlayerPlaylist>()
     suspend fun getUserPreferences() = userPreferencesRepository.getFirstUserPreferences()
 
     fun requestPlayer (currentVideoId:Long, source:Any) {
         progressVisible.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             val videos = videoRepository.getVideos(source as LongArray)
-            player.apply {
-                withContext(Dispatchers.Main) {
-                    setMediaItems(videos, videos.indexOfFirst { it.id == currentVideoId })
-                }
-            }
-            isSetVideo.postValue(true)
+            playerPlaylist.postValue(PlayerPlaylist(videos, videos.indexOfFirst { it.id == currentVideoId }))
         }
         progressVisible.postValue(false)
     }
@@ -40,11 +34,11 @@ class PlayerViewModel (private val videoRepository: VideoRepository, private val
         }
     }
 
-    class PlayerViewModelFactory(private val videoRepo: VideoRepository, private val userPreferencesRepo: UserPreferencesRepository, private val player:Player):
+    class PlayerViewModelFactory(private val videoRepo: VideoRepository, private val userPreferencesRepo: UserPreferencesRepository):
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if(modelClass.isAssignableFrom(PlayerViewModel::class.java)){
-                return PlayerViewModel(videoRepo, userPreferencesRepo, player) as T
+                return PlayerViewModel(videoRepo, userPreferencesRepo) as T
             }
             throw IllegalAccessException()
         }

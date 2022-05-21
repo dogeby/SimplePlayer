@@ -9,11 +9,6 @@ import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.models.VideoInfo
 import java.util.*
 
-/**
- * Bug: 지원하지 않는 비디오 때문에 next 또는 prev 넘어가지 못하는 버그 존재
- * lateinit 주의
- */
-
 class Player(private val player:ExoPlayer) {
     private lateinit var videos:List<Video>
     var eventMediaItemTransitionCallback:(videoInfo:VideoInfo)->Unit = {}
@@ -57,6 +52,7 @@ class Player(private val player:ExoPlayer) {
         view.player = player
     }
 
+    fun isPlaying() = player.isPlaying
     fun prepare() {player.prepare()}
     fun play() {player.play()}
     fun stop() {player.stop()}
