@@ -14,6 +14,9 @@ interface VideoInfoDbDao {
     @Delete
     fun delete(videoInfo: VideoInfo)
 
+    @Query("UPDATE VideoInfo SET playback_date = NULL")
+    fun updateAllVideoInfoPlaybackDateNull()
+
     @Query("UPDATE VideoInfo SET playback_date = NULL WHERE video_id = :videoId")
     fun updatePlaybackDateNull(videoId:Long)
 

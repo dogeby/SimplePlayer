@@ -33,6 +33,11 @@ class PlaylistRepository(private val playlistDbDao: PlaylistDbDao, private val v
         playlistDbDao.deletePlayListVideoInfoCrossRef(playlistVideoInfoCrossRef)
     }
 
+    fun deleteAllPlaylist() {
+        playlistDbDao.deleteAllPlaylistVideoInfoCrossRef()
+        playlistDbDao.deleteAllPlaylist()
+    }
+
     suspend fun getPlaylist(name:String) = playlistDbDao.getPlaylist(name)
 
     suspend fun getPlaylists() = playlistDbDao.getPlaylists()

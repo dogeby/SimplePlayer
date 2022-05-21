@@ -33,6 +33,10 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
         videoInfoDbDao.delete(videoInfo)
     }
 
+    fun updateAllVideoInfoPlaybackDateNull(){
+        videoInfoDbDao.updateAllVideoInfoPlaybackDateNull()
+    }
+
     suspend fun getVideoInfo(id:Long) = videoInfoDbDao.getVideoInfo(id)
 
     suspend fun getVideosInfo(ids: LongArray) = videoInfoDbDao.getVideosInfo(ids)

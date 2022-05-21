@@ -29,6 +29,12 @@ interface PlaylistDbDao {
     @Query("DELETE FROM PlaylistVideoInfoCrossRef WHERE video_id = :videoInfoId")
     fun deletePlayListVideoInfoCrossRef(videoInfoId:Long)
 
+    @Query("DELETE FROM PlaylistVideoInfoCrossRef")
+    fun deleteAllPlaylistVideoInfoCrossRef()
+
+    @Query("DELETE FROM Playlist")
+    fun deleteAllPlaylist()
+
     @Query("SELECT * FROM Playlist")
     suspend fun getPlaylists():List<Playlist>
 

@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.preference.PreferenceCategory
-        android:icon="@drawable/ic_baseline_format_paint_24"
         android:title="@string/thema">
         <androidx.preference.Preference
             android:fragment="com.yang.simpleplayer.fragments.preference.ControllerThemaPreferFragment"
             android:key="@string/player_controller_thema_key"
             android:title="@string/player_controller_thema" />
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        android:title="@string/init_data">
+        <androidx.preference.Preference
+            android:key="@string/init_recent_video_list_key"
+            android:title="@string/init_recent_video_list"/>
+        <androidx.preference.Preference
+            android:key="@string/init_playlist_key"
+            android:title="@string/init_playlist"/>
+    </androidx.preference.PreferenceCategory>
+    <androidx.preference.PreferenceCategory
+        android:title="@string/information">
+        <androidx.preference.Preference
+            android:key="@string/open_source_license_key"
+            android:title="@string/open_source_license"/>
     </androidx.preference.PreferenceCategory>
 </androidx.preference.PreferenceScreen>
