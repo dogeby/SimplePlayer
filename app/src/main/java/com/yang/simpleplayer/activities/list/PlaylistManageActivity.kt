@@ -1,10 +1,9 @@
-package com.yang.simpleplayer.activities
+package com.yang.simpleplayer.activities.list
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.databinding.ActivityPlaylistManageBinding
 import com.yang.simpleplayer.fragments.list.playlist.PlaylistListFragment
 import com.yang.simpleplayer.models.PlaylistVideoInfoCrossRef

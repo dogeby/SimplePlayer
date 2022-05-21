@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.activities.PlayerActivity
-import com.yang.simpleplayer.activities.PlaylistManageActivity
 import com.yang.simpleplayer.activities.SettingsActivity
 import com.yang.simpleplayer.databinding.ActivityListBinding
 import com.yang.simpleplayer.fragments.list.folder.FolderListFragment

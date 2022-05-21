@@ -17,18 +17,18 @@
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".activities.PlaylistManageActivity"
+            android:name=".activities.list.PlaylistManageActivity"
             android:exported="false" />
         <activity
             android:name=".activities.PlayerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout"
-            android:supportsPictureInPicture="true"
-            android:launchMode="singleTask"
-            android:taskAffinity=".activities.PlayerActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
             android:autoRemoveFromRecents="true"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout"
+            android:excludeFromRecents="true"
             android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:supportsPictureInPicture="true"
+            android:taskAffinity=".activities.PlayerActivity"
             android:theme="@style/Theme.SimplePlayer" />
         <activity
             android:name=".activities.MainActivity"
@@ -36,12 +36,19 @@
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.list.ListActivity"
             android:exported="true"
+            android:theme="@style/Theme.SimplePlayer" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.SimplePlayer" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
             android:theme="@style/Theme.SimplePlayer" />
     </application>
 

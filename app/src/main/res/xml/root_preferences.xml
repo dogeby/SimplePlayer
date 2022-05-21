@@ -19,7 +19,8 @@
     <androidx.preference.PreferenceCategory
         android:title="@string/information">
         <androidx.preference.Preference
-            android:key="@string/open_source_license_key"
-            android:title="@string/open_source_license"/>
+            android:key="@string/show_open_source_licenses_key"
+            android:title="@string/open_source_license">
+        </androidx.preference.Preference>
     </androidx.preference.PreferenceCategory>
 </androidx.preference.PreferenceScreen>

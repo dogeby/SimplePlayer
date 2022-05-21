@@ -72,8 +72,6 @@ class RecentVideoListFragment : Fragment() {
         viewModel.recentVideoItems.observe(viewLifecycleOwner) { recentVideoItems ->
             if(recentVideoItems.isNotEmpty()) {
                 if(binding.root.size > rootViewSize) binding.root.removeView(emptyView)
-                adapter.updateVideos(recentVideoItems)
-
             } else if(binding.root.size == rootViewSize) {  //리스트가 비어있는 경우
                 binding.root.addView(emptyView)
             }
@@ -93,7 +91,6 @@ class RecentVideoListFragment : Fragment() {
                 return false
             }
         })
-        viewModel.list()
     }
 
     override fun onDestroyView() {

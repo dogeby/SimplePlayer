@@ -1,6 +1,7 @@
 package com.yang.simpleplayer.activities
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.databinding.SettingsActivityBinding
@@ -58,6 +60,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            /** 최근 동영상 목록 초기화 */
             val initRecentVideoListPreference = findPreference<Preference>(getString(R.string.init_recent_video_list_key))
             initRecentVideoListPreference?.setOnPreferenceClickListener {
                 createInitAskAlertDialog(R.string.init_recent_video_ask){_, _ ->
@@ -68,6 +71,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 }?.show()
                 true
             }
+            /** 재생 목록 초기화 */
             val initPlaylistPreference = findPreference<Preference>(getString(R.string.init_playlist_key))
             initPlaylistPreference?.setOnPreferenceClickListener {
                 createInitAskAlertDialog(R.string.init_playlist_ask) { _, _ ->
@@ -76,6 +80,13 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                     }
                     showToastMessage(R.string.initSuccess)
                 }?.show()
+                true
+            }
+            /** 오픈소스 라이선스 */
+            val showOpenSourceLicensesPreference = findPreference<Preference>(getString(R.string.show_open_source_licenses_key))
+            showOpenSourceLicensesPreference?.setOnPreferenceClickListener {
+                startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+                OssLicensesMenuActivity.setActivityTitle(getString(R.string.open_source_license))
                 true
             }
         }
