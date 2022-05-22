@@ -66,7 +66,7 @@ class VideoListFragment : Fragment() {
                 val callbacks = mutableListOf<()->Unit>()
                 moreBtnStrArr.add(getString(R.string.add_to_playlist))
                 callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))}
-                if(playlistIdSource == -1L) {
+                if(playlistIdSource != -1L) {
                     moreBtnStrArr.add(getString(R.string.video_delete_from_playlist))
                     callbacks.add {
                         viewModel.deleteVideoFromPlaylist(video.id, playlistIdSource as Long)
