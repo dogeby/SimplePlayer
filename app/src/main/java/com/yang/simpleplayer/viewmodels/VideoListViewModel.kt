@@ -9,6 +9,7 @@ import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.repositories.PlaylistRepository
 import com.yang.simpleplayer.repositories.VideoRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -18,28 +19,26 @@ import kotlinx.coroutines.launch
  */
 
 class VideoListViewModel(private val videoRepository: VideoRepository, private val playlistRepository: PlaylistRepository):ViewModel() {
-    val progressVisible = MutableLiveData<Boolean>()
     val videos = MutableLiveData<List<Video>>()
-    val exceptionMessageResId = MutableLiveData<String>()
-
-    fun list(source:Long) { //source: playlist id
-        progressVisible.postValue(true)
+    val exceptionMessageResId = MutableLiveData<Int>()
+    /** source: playlist id */
+    fun list(source:Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            val playlistWithVideoInfo = playlistRepository.getPlaylistWithVideoInfo(source)
-            val ids = LongArray(playlistWithVideoInfo.videoInfo.size){playlistWithVideoInfo.videoInfo[it].videoId}
-            val videoList = videoRepository.getVideos(ids)
-            videoList.forEach { video ->
-                videoRepository.getVideoInfo(video.id)?.let {
-                    video.videoInfo = it
+            val playlistWithVideoInfoFlow = playlistRepository.getPlaylistWithVideoInfo(source)
+            playlistWithVideoInfoFlow.collect { playlistWithVideoInfo ->
+                val ids = LongArray(playlistWithVideoInfo.videoInfo.size){playlistWithVideoInfo.videoInfo[it].videoId}
+                val videoList = videoRepository.getVideos(ids)
+                videoList.forEach { video ->
+                    videoRepository.getVideoInfo(video.id)?.let {
+                        video.videoInfo = it
+                    }
                 }
+                videos.postValue(videoList)
             }
-            videos.postValue(videoList)
-            progressVisible.postValue(false)
         }
     }
-
-    fun list(source:String) {   //source: folder name
-        progressVisible.postValue(true)
+    /** source: folder name */
+    fun list(source:String) {
         viewModelScope.launch(Dispatchers.IO) {
             val videoList = videoRepository.getVideos(source)
             videoList.forEach { video ->
@@ -48,7 +47,6 @@ class VideoListViewModel(private val videoRepository: VideoRepository, private v
                 }
             }
             videos.postValue(videoList)
-            progressVisible.postValue(false)
         }
     }
 

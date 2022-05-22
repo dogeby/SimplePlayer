@@ -149,6 +149,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         viewModel.exceptionMessageResId.observe(this) { exceptionMessageResId ->
             showToastMessage(exceptionMessageResId.toInt())
+            finish()
         }
     }
 

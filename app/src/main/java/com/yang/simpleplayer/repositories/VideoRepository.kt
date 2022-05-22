@@ -43,7 +43,7 @@ class VideoRepository(private val videoDao: VideoDao, private val videoInfoDbDao
 
     suspend fun getAllVideoInfo() = videoInfoDbDao.getAllVideoInfo()
 
-    suspend fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
+    fun getRecentVideosInfo() = videoInfoDbDao.getRecentVideosInfo()
 
     fun updatePlaybackDateNull(videoId: Long) = videoInfoDbDao.updatePlaybackDateNull(videoId)
 }

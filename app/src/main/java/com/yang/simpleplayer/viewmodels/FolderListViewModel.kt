@@ -10,16 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FolderListViewModel(private val folderRepository: FolderRepository):ViewModel() {
-
-    val progressVisible = MutableLiveData<Boolean>()
     val folders = MutableLiveData<List<Folder>>()
-    val exceptionMessageResId = MutableLiveData<String>()
+    val exceptionMessageResId = MutableLiveData<Int>()
 
     fun list() {
-        progressVisible.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             folders.postValue(folderRepository.getFolders())
-            progressVisible.postValue(false)
         }
     }
 

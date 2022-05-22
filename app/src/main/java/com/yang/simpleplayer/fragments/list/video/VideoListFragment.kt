@@ -9,12 +9,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.common.MoreDialogFactory
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.viewmodels.VideoListViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // TODO: 플레이 리스트 동영상 이름순 정렬인거 해결
 class VideoListFragment : Fragment() {
@@ -44,13 +47,8 @@ class VideoListFragment : Fragment() {
         }
         _viewModel = ViewModelProvider(this, VideoListViewModel.VideoListViewModelFactory(videoRepo, playlistRepo)).get(VideoListViewModel::class.java)
         initUi()
-        return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // TODO: RecyclerView 최적화 필요
         requestList()
+        return binding.root
     }
 
     private fun initUi() {
@@ -69,8 +67,7 @@ class VideoListFragment : Fragment() {
                 if(playlistIdSource != -1L) {
                     moreBtnStrArr.add(getString(R.string.video_delete_from_playlist))
                     callbacks.add {
-                        viewModel.deleteVideoFromPlaylist(video.id, playlistIdSource as Long)
-                        requestList()
+                        viewModel.deleteVideoFromPlaylist(video.id, playlistIdSource)
                     }
                 }
                 context?.let { MoreDialogFactory.create(it, moreBtnStrArr.toTypedArray(), *callbacks.toTypedArray()).show() }
@@ -89,13 +86,10 @@ class VideoListFragment : Fragment() {
             }
             adapter.updateVideos(videos)
         }
-//        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
-//            (activity as FragmentNeeds).setProgressBar(progressVisible)
-//        }
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
             (activity as FragmentNeeds).showToastMessage(exceptionMessageResId.toInt())
         }
-        (activity as FragmentNeeds).setRefreshListener { requestList() }
+        (activity as FragmentNeeds).setRefreshListener { requestRefresh() }
         (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean { return false }
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -104,7 +98,7 @@ class VideoListFragment : Fragment() {
             }
         })
     }
-
+    /** create시 리스트 요쳥 */
     private fun requestList() {
         if(_folderNameSource != null) {
             viewModel.list(folderNameSource)
@@ -113,7 +107,17 @@ class VideoListFragment : Fragment() {
             viewModel.list(playlistIdSource)
         }
     }
-
+    /** swipe refresh 동작 */
+    private fun requestRefresh() {
+        if(_folderNameSource != null) {
+            viewModel.list(folderNameSource)
+        }
+        if(playlistIdSource != -1L) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                (activity?.application as SimplePlayerApplication).appContainer.checkInvalidData()
+            }
+        }
+    }
     override fun onDestroyView() {
         _binding = null
         _viewModel = null

@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
@@ -21,6 +22,8 @@ import com.yang.simpleplayer.databinding.FragmentPlaylistListBinding
 import com.yang.simpleplayer.models.Playlist
 import com.yang.simpleplayer.models.PlaylistWithVideoInfo
 import com.yang.simpleplayer.viewmodels.PlaylistViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PlaylistListFragment : Fragment() {
 
@@ -34,11 +37,6 @@ class PlaylistListFragment : Fragment() {
         (layoutInflater.inflate(R.layout.view_empty_list, null) as TextView).apply {
             setText(R.string.empty_playlistList)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.list()
     }
 
     override fun onCreateView(
@@ -56,7 +54,7 @@ class PlaylistListFragment : Fragment() {
         _adapter = PlaylistListAdapter()
         binding.playlistList.adapter = adapter
 
-        val editNameAlertDialog = { title:String, positiveBtnListener:(String)->Unit -> //플레이리스트 이름 관련 AlertDialog
+        val editNameAlertDialog = { title:String, positiveBtnListener:(String)->Unit -> /** 플레이리스트 이름 관련 AlertDialog */
             val builder = context?.let { AlertDialog.Builder(it).apply { setTitle(title) } }
             val dialogAddPlaylistBinding = DialogPlaylistNameBinding.inflate(layoutInflater)
             builder?.setView(dialogAddPlaylistBinding.root)
@@ -90,22 +88,17 @@ class PlaylistListFragment : Fragment() {
 
         setItemOnClickListener((activity as FragmentNeeds)::startVideoListFragment)
 
+        /** 플레이리스트 more 버튼 클릭 시 */
         setMoreBtnOnClickListener { playlistWithVideoInfo ->
-            /**
-             * 플레이리스트 more 버튼 클릭 시
-             * playlist 이름 변경
-             * playlist 삭제
-             */
             val callbacks = mutableListOf<()->Unit>()
-            callbacks.add{  //플레이리스트 수정
+            /**플레이리스트 수정 */
+            callbacks.add{
                 editNameAlertDialog(resources.getStringArray(R.array.playlist_manage_more_btn_arr)[0]) {inputPlaylistName ->
                     viewModel.updatePlaylist(Playlist(playlistWithVideoInfo.playlist.playlistId, inputPlaylistName))
                 }
             }
-            callbacks.add { //플레이리스트 삭제
-                viewModel.deletePlaylist(playlistWithVideoInfo.playlist)
-                viewModel.list()
-            }
+            /** 플레이리스트 삭제 */
+            callbacks.add { viewModel.deletePlaylist(playlistWithVideoInfo.playlist) }
             context?.let { MoreDialogFactory.create(it, R.array.playlist_manage_more_btn_arr, *callbacks.toTypedArray()).show() }
         }
 
@@ -114,16 +107,16 @@ class PlaylistListFragment : Fragment() {
             if(playlistsWithVideoInfo.isNotEmpty()) {
                 if(binding.root.size > rootViewSize) binding.root.removeView(emptyView)
                 adapter.updatePlaylists(playlistsWithVideoInfo)
-
-            } else if(binding.root.size == rootViewSize) {  //리스트가 비어있는 경우
+            } else if(binding.root.size == rootViewSize) {  /** 리스트가 비어있는 경우 */
                 binding.root.addView(emptyView)
             }
             adapter.updatePlaylists(playlistsWithVideoInfo)
         }
-        viewModel.doListUpdate.observe(viewLifecycleOwner) { doListUpdate ->
-            if(doListUpdate) viewModel.list()
+        (activity as FragmentNeeds).setRefreshListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                (activity?.application as SimplePlayerApplication).appContainer.checkInvalidData()
+            }
         }
-        (activity as FragmentNeeds).setRefreshListener { viewModel.list() }
         (activity as FragmentNeeds).setOnQueryTextListener(object:SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean { return false }
 

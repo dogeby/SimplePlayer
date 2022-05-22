@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.yang.simpleplayer.R
 import com.yang.simpleplayer.models.PlayerPlaylist
 import com.yang.simpleplayer.models.VideoInfo
 import com.yang.simpleplayer.repositories.UserPreferencesRepository
@@ -12,19 +13,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PlayerViewModel (private val videoRepository: VideoRepository, private val userPreferencesRepository: UserPreferencesRepository):ViewModel() {
-
-    val progressVisible = MutableLiveData<Boolean>()
-    val exceptionMessageResId = MutableLiveData<String>()
+    val exceptionMessageResId = MutableLiveData<Int>()
     val playerPlaylist = MutableLiveData<PlayerPlaylist>()
     suspend fun getUserPreferences() = userPreferencesRepository.getFirstUserPreferences()
 
     fun requestPlayer (currentVideoId:Long, source:Any) {
-        progressVisible.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             val videos = videoRepository.getVideos(source as LongArray)
-            playerPlaylist.postValue(PlayerPlaylist(videos, videos.indexOfFirst { it.id == currentVideoId }))
+            if(videos.isEmpty()) exceptionMessageResId.postValue(R.string.empty_video_exception)
+            else playerPlaylist.postValue(PlayerPlaylist(videos, videos.indexOfFirst { it.id == currentVideoId }))
         }
-        progressVisible.postValue(false)
     }
 
     //중복 시 replace

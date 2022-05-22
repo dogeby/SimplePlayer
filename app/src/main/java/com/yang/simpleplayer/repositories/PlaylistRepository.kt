@@ -42,9 +42,9 @@ class PlaylistRepository(private val playlistDbDao: PlaylistDbDao, private val v
 
     suspend fun getPlaylists() = playlistDbDao.getPlaylists()
 
-    suspend fun getPlaylistsWithVideoInfo() = playlistDbDao.getPlaylistsWithVideoInfo()
+    fun getPlaylistsWithVideoInfo() = playlistDbDao.getPlaylistsWithVideoInfo()
 
     suspend fun getVideoInfoWithPlaylists() = playlistDbDao.getVideoInfoWithPlaylists()
 
-    suspend fun getPlaylistWithVideoInfo(playlistId: Long) = playlistDbDao.getPlaylistWithVideoInfo(playlistId)
+    fun getPlaylistWithVideoInfo(playlistId: Long) = playlistDbDao.getPlaylistWithVideoInfo(playlistId)
 }

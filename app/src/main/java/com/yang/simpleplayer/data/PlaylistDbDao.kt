@@ -5,6 +5,7 @@ import com.yang.simpleplayer.models.Playlist
 import com.yang.simpleplayer.models.PlaylistVideoInfoCrossRef
 import com.yang.simpleplayer.models.PlaylistWithVideoInfo
 import com.yang.simpleplayer.models.VideoWithPlaylists
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlaylistDbDao {
@@ -46,11 +47,11 @@ interface PlaylistDbDao {
 
     @Transaction
     @Query("SELECT * FROM Playlist WHERE playlist_id = :playlistId")
-    suspend fun getPlaylistWithVideoInfo(playlistId: Long): PlaylistWithVideoInfo
+    fun getPlaylistWithVideoInfo(playlistId: Long): Flow<PlaylistWithVideoInfo>
 
     @Transaction
     @Query("SELECT * FROM Playlist")
-    suspend fun getPlaylistsWithVideoInfo(): List<PlaylistWithVideoInfo>
+    fun getPlaylistsWithVideoInfo(): Flow<List<PlaylistWithVideoInfo>>
 
     @Transaction
     @Query("SELECT * FROM VideoInfo")

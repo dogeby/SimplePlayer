@@ -9,12 +9,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.yang.simpleplayer.R
 import com.yang.simpleplayer.SimplePlayerApplication
 import com.yang.simpleplayer.activities.list.FragmentNeeds
 import com.yang.simpleplayer.common.MoreDialogFactory
 import com.yang.simpleplayer.databinding.FragmentVideoListBinding
 import com.yang.simpleplayer.viewmodels.RecentListViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RecentVideoListFragment : Fragment() {
 
@@ -32,7 +35,7 @@ class RecentVideoListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val videoRepo = ( activity?.application as SimplePlayerApplication).appContainer.videoRepository
+        val videoRepo = (activity?.application as SimplePlayerApplication).appContainer.videoRepository
         _binding = FragmentVideoListBinding.inflate(layoutInflater)
         _viewModel = ViewModelProvider(this, RecentListViewModel.RecentListViewModelFactory(videoRepo)).get(RecentListViewModel::class.java)
         initUi()
@@ -77,13 +80,14 @@ class RecentVideoListFragment : Fragment() {
             }
             adapter.updateVideos(recentVideoItems)
         }
-//        viewModel.progressVisible.observe(viewLifecycleOwner) { progressVisible ->
-//            (activity as FragmentNeeds).setProgressBar(progressVisible)
-//        }
         viewModel.exceptionMessageResId.observe(viewLifecycleOwner) { exceptionMessageResId ->
             (activity as FragmentNeeds).showToastMessage(exceptionMessageResId.toInt())
         }
-        (activity as FragmentNeeds).setRefreshListener { viewModel.list() }
+        (activity as FragmentNeeds).setRefreshListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                (activity?.application as SimplePlayerApplication).appContainer.checkInvalidData()
+            }
+        }
         (activity as FragmentNeeds).setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean { return false }
             override fun onQueryTextChange(newText: String?): Boolean {

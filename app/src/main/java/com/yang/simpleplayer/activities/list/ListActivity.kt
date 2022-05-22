@@ -153,10 +153,6 @@ class ListActivity : AppCompatActivity(),FragmentNeeds {
         Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
     }
 
-    override fun setProgressBar(visible:Boolean) {
-        binding.progressBar.visibility = if(visible) View.VISIBLE else View.GONE
-    }
-
     override fun setRefreshListener(update: () -> Unit) {
         binding.swipeRefreshLayout.setOnRefreshListener {
             update()

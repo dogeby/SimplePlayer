@@ -54,7 +54,6 @@ class PlaylistManageActivity : AppCompatActivity(),FragmentNeeds{
     override fun showToastMessage(resId:Int) {
         Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
     }
-    override fun setProgressBar(visible: Boolean) { }
     override fun setRefreshListener(update: () -> Unit) {
         binding.swipeRefreshLayout.setOnRefreshListener{
             update()

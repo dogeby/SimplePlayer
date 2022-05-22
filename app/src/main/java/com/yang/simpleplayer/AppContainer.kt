@@ -27,7 +27,7 @@ class AppContainer(context:Context) {
         }
     }
 
-    private suspend fun checkInvalidData() {
+    suspend fun checkInvalidData() {
         val playlistDbDao = appDatabase.playlistDbDao()
         val videos = videoDao.getVideos()
         val videoHashSet = HashSet<Long>()

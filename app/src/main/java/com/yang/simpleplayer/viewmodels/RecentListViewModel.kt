@@ -9,44 +9,44 @@ import com.yang.simpleplayer.models.Video
 import com.yang.simpleplayer.repositories.VideoRepository
 import com.yang.simpleplayer.utils.Format
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RecentListViewModel(private val videoRepository: VideoRepository): ViewModel() {
-    val progressVisible = MutableLiveData<Boolean>()
     val recentVideoItems = MutableLiveData<List<RecentVideoItem>>()
-    val exceptionMessageResId = MutableLiveData<String>()
+    val exceptionMessageResId = MutableLiveData<Int>()
 
     fun list() {
-        progressVisible.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
-            val recentVideosInfo = videoRepository.getRecentVideosInfo()
-            val recentVideoIds = LongArray(recentVideosInfo.size){recentVideosInfo[it].videoId}
-            val videoList = videoRepository.getVideos(recentVideoIds)
-            withContext(Dispatchers.Default) {
-                val videoMap = HashMap<Long, Video>()
-                videoList.forEach { video ->
-                    videoMap[video.id] = video
-                }
-                val recentVideoItemList = mutableListOf<RecentVideoItem>()
-                var korDate = if(recentVideosInfo.isNotEmpty()) {
-                    val firstKorDate = recentVideosInfo[0].playbackDate?.let { Format.dateToKorDate(it) }
-                    recentVideoItemList.add(RecentVideoItem(null, firstKorDate, RecentVideoItem.DATE))
-                    firstKorDate
-                } else null
-                recentVideosInfo.forEach { videoInfo ->
-                    videoMap[videoInfo.videoId]?.let {
-                        it.videoInfo = videoInfo
-                        val tmpKorDate = videoInfo.playbackDate?.let { date -> Format.dateToKorDate(date) }
-                        if(tmpKorDate != korDate) {
-                            korDate = tmpKorDate
-                            recentVideoItemList.add(RecentVideoItem(null, korDate, RecentVideoItem.DATE))
-                        }
-                        recentVideoItemList.add(RecentVideoItem(it))
+            val recentVideoInfoFlow = videoRepository.getRecentVideosInfo()
+            recentVideoInfoFlow.collect { recentVideoInfo ->
+                val recentVideoIds = LongArray(recentVideoInfo.size){recentVideoInfo[it].videoId}
+                val videoList = videoRepository.getVideos(recentVideoIds)
+                withContext(Dispatchers.Default) {
+                    val videoMap = HashMap<Long, Video>()
+                    videoList.forEach { video ->
+                        videoMap[video.id] = video
                     }
+                    val recentVideoItemList = mutableListOf<RecentVideoItem>()
+                    var korDate = if(recentVideoInfo.isNotEmpty()) {
+                        val firstKorDate = recentVideoInfo[0].playbackDate?.let { Format.dateToKorDate(it) }
+                        recentVideoItemList.add(RecentVideoItem(null, firstKorDate, RecentVideoItem.DATE))
+                        firstKorDate
+                    } else null
+                    recentVideoInfo.forEach { videoInfo ->
+                        videoMap[videoInfo.videoId]?.let {
+                            it.videoInfo = videoInfo
+                            val tmpKorDate = videoInfo.playbackDate?.let { date -> Format.dateToKorDate(date) }
+                            if(tmpKorDate != korDate) {
+                                korDate = tmpKorDate
+                                recentVideoItemList.add(RecentVideoItem(null, korDate, RecentVideoItem.DATE))
+                            }
+                            recentVideoItemList.add(RecentVideoItem(it))
+                        }
+                    }
+                    recentVideoItems.postValue(recentVideoItemList)
                 }
-                recentVideoItems.postValue(recentVideoItemList)
-                progressVisible.postValue(false)
             }
         }
     }
