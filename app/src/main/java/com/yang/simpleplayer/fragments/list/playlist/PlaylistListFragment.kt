@@ -54,11 +54,11 @@ class PlaylistListFragment : Fragment() {
         _adapter = PlaylistListAdapter()
         binding.playlistList.adapter = adapter
 
-        val editNameAlertDialog = { title:String, positiveBtnListener:(String)->Unit -> /** 플레이리스트 이름 관련 AlertDialog */
+        val editNameAlertDialog = { title:String, positiveBtnTextResId:Int, positiveBtnListener:(String)->Unit -> /** 플레이리스트 이름 관련 AlertDialog */
             val builder = context?.let { AlertDialog.Builder(it).apply { setTitle(title) } }
             val dialogAddPlaylistBinding = DialogPlaylistNameBinding.inflate(layoutInflater)
             builder?.setView(dialogAddPlaylistBinding.root)
-                ?.setPositiveButton(R.string.add) {_, _ -> positiveBtnListener(dialogAddPlaylistBinding.playlistNameEt.text.toString())}
+                ?.setPositiveButton(positiveBtnTextResId) {_, _ -> positiveBtnListener(dialogAddPlaylistBinding.playlistNameEt.text.toString())}
                 ?.setNegativeButton(R.string.cancel){_, _ ->}
             val dialog = builder?.create()?.apply { show() }
             dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
@@ -83,7 +83,7 @@ class PlaylistListFragment : Fragment() {
                 }
             })
         }
-        binding.addPlaylist.setOnClickListener{editNameAlertDialog(getString(R.string.add_playlist)) {inputPlaylistName ->
+        binding.addPlaylist.setOnClickListener{editNameAlertDialog(getString(R.string.add_playlist),R.string.add) {inputPlaylistName ->
             viewModel.insertPlaylist(Playlist(inputPlaylistName))} }
 
         setItemOnClickListener((activity as FragmentNeeds)::startVideoListFragment)
@@ -93,7 +93,7 @@ class PlaylistListFragment : Fragment() {
             val callbacks = mutableListOf<()->Unit>()
             /**플레이리스트 수정 */
             callbacks.add{
-                editNameAlertDialog(resources.getStringArray(R.array.playlist_manage_more_btn_arr)[0]) {inputPlaylistName ->
+                editNameAlertDialog(resources.getStringArray(R.array.playlist_manage_more_btn_arr)[0], R.string.modify) {inputPlaylistName ->
                     viewModel.updatePlaylist(Playlist(playlistWithVideoInfo.playlist.playlistId, inputPlaylistName))
                 }
             }
