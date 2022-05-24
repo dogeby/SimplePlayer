@@ -18,16 +18,15 @@ Programming language: Kotlin
 <img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169883642-ab6dba69-8f11-4bd9-9345-9340556f31b7.jpg"/>
 
 ### 재생 목록 리스트
-<img  height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169883799-72a04157-578b-4ea8-8c16-039519ee7f8c.jpg"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169884867-54d0ee52-745f-4e26-a473-cc31ee44e2cf.jpg"/>
+<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/170060351-b952deba-83f7-4b4a-bad8-3e298fee18ac.gif"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img  height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169883799-72a04157-578b-4ea8-8c16-039519ee7f8c.jpg"/>
 
 ### 검색
-<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169883960-8feed94f-3f3f-4a84-a25d-20f51a0945e8.jpg"/>
+<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/170061886-8122349f-b208-409b-aad8-8dc2bc986e12.gif"/>
 
 ### 동영상 재생
-<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169889037-3c8db4d9-9244-4f3c-961e-b59128073755.gif"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169889737-513b6836-7f43-45b9-8370-69ed1ad4c9e3.gif"/>
+<img height="180" width="400" src="https://user-images.githubusercontent.com/68229193/170056379-1e93c22e-a16c-40f4-bea5-dc2ee36c8a72.jpg"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/170054061-1b6e029d-e6f6-4c50-b2c0-033b771a445f.gif"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169889737-513b6836-7f43-45b9-8370-69ed1ad4c9e3.gif"/>
 
 ### PIP 모드
-<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169884462-930298a1-5fa0-4ca2-a21c-b80a3bfeeb31.jpg"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169884467-17a9c1e6-8365-4832-be1a-08c19d203b56.jpg"/>
-
+<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/170029300-1b1fb280-d13a-49de-958d-ac4535d90937.gif"/>  
 ### 설정
-<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169884058-b259bcfe-4dfb-492c-9f31-67a4a6e13080.jpg"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169884064-8b1e5b49-dd1a-45fe-82fa-b67fa5dbd450.jpg"/>
+<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169884058-b259bcfe-4dfb-492c-9f31-67a4a6e13080.jpg"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img height="600" width="270" src="https://user-images.githubusercontent.com/68229193/169884064-8b1e5b49-dd1a-45fe-82fa-b67fa5dbd450.jpg"/>
