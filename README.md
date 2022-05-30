@@ -63,7 +63,7 @@ Datastore, Preference로 구현한 앱 설정<br/>
 * Preference, Datastore
 ## 주요 트러블 슈팅
 <details>
-  <summary>드물게 동영상 플레이어(PlayerActivity) 종료 시 이전 UI 겹침 현상 발생</summary>
+  <summary>드물게 동영상 플레이어(PlayerActivity) 종료 시 이전 UI 겹침 현상</summary>
   
   * 증상: 동영상 재생 화면에서 백 버튼 클릭 시 동영상 리스트 UI와 폴더 리스트 UI가 겹쳐서 나온다.<br/>
   한 번 더 백 버튼 클릭 시 두 폴더 리스트 UI가 겹쳐서 나온다.<br/>
@@ -100,4 +100,32 @@ Datastore, Preference로 구현한 앱 설정<br/>
     }
   ```
   
+</details>
+
+<details>
+  <summary>가끔씩 최근 동영상이나 재생목록, 재생목록의 동영상 삭제 할 때나 재생목록의 이름 수정 시 리스트가 업데이트 안 되는 문제</summary>
+  
+  * 증상: 최근 동영상, 재생목록, 재생목록의 동영상 삭제 시 리스트에 삭제한 아이템이 사라져야지만 리스트에 남아있다.</br>
+  재생목록의 이름 수정 시 수정 전 이름 그대로이다.</br>
+  SwipeRefresh을 통해 업데이트 호출해야지 적용된 UI를 볼 수 있다.</br>
+  
+  * 원인: 삭제 또는 수정 함수 호출 후 리스트 업데이트 함수를 호출하는데 이 두 함수는 비동기로 작동하기 때문에 변경 전 데이터가 업데이트되는 경우가 있다. 
+  
+  * 조치: 리스트 업데이트 함수를 삭제하고, 리스트 업데이트를 Flow에 맡기기로 했다.
+  
+  재생목록 리스트의 경우</br>
+  PlaylistViewModel.kt
+  ```kt
+  val playlistsWithVideoInfo = playlistRepository.getPlaylistsWithVideoInfo().asLiveData()
+  ```
+  PlaylistRepository.kt
+  ```kt
+  fun getPlaylistsWithVideoInfo() = playlistDbDao.getPlaylistsWithVideoInfo()
+  ```
+  PlaylistDbDao.kt
+  ```kt
+  @Transaction
+  @Query("SELECT * FROM Playlist")
+  fun getPlaylistsWithVideoInfo(): Flow<List<PlaylistWithVideoInfo>>
+  ```
 </details>
