@@ -70,7 +70,7 @@ Datastore, Preference로 구현한 앱 설정<br/>
   
   * 원인: 동영상 재생 중 드물게 현재 PlayerActivity 이전 Activity인 ListActivity가 destroy 되고, VideoListFragment도 destroy 된다.<br/>
   ListActivity가 destroy 된 이유는 시스템이 ListActivity를 종료시킨 것으로 생각된다.<br/>
-  그래서 PlayerActivity가 종료되면 ListActivity가 create 되면서 activity에 FolderListFragment를 추가하는 코드가 동작했기에 UI가 겹치는 문제가 발생한 것으로 생각된다.<br/>
+  PlayerActivity가 종료되면 destroy했던 ListActivity가 create 되면서 activity에 FolderListFragment를 추가하는 코드가 동작했기에 UI가 겹치는 문제가 발생한 것으로 생각된다.<br/>
   
   * 조치: 만약 ListActivity가 recreat시 기본 Fragment(FolderListFragment)를 추가 안 하게 조치했다.
   ```kt
