@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-data class VideoWithPlaylists(
+data class VideoInfoWithPlaylists(
     @Embedded val videoInfo: VideoInfo,
     @Relation(
         parentColumn = "video_id",

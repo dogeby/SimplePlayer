@@ -4,7 +4,7 @@ import androidx.room.*
 import com.yang.simpleplayer.models.Playlist
 import com.yang.simpleplayer.models.PlaylistVideoInfoCrossRef
 import com.yang.simpleplayer.models.PlaylistWithVideoInfo
-import com.yang.simpleplayer.models.VideoWithPlaylists
+import com.yang.simpleplayer.models.VideoInfoWithPlaylists
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -55,5 +55,5 @@ interface PlaylistDbDao {
 
     @Transaction
     @Query("SELECT * FROM VideoInfo")
-    suspend fun getVideoInfoWithPlaylists():List<VideoWithPlaylists>
+    suspend fun getVideoInfoWithPlaylists():List<VideoInfoWithPlaylists>
 }
