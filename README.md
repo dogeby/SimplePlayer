@@ -61,5 +61,43 @@ Datastore, Preference로 구현한 앱 설정<br/>
 * Exoplayer, Glide
 * Room
 * Preference, Datastore
-
-## 트러블 슈팅
+## 주요 트러블 슈팅
+<details>
+  <summary>드물게 동영상 플레이어(PlayerActivity) 종료 시 이전 UI 겹침 현상 발생</summary>
+  
+  * 증상: 동영상 재생 화면에서 백 버튼 클릭 시 동영상 리스트 UI와 폴더 리스트 UI가 겹쳐서 나온다.<br/>
+  한 번 더 백 버튼 클릭 시 두 폴더 리스트 UI가 겹쳐서 나온다.<br/>
+  
+  * 원인: 동영상 재생 중 드물게 현재 PlayerActivity 이전 Activity인 ListActivity가 destroy 되고, VideoListFragment도 destroy 된다.<br/>
+  ListActivity가 destroy 된 이유는 시스템이 ListActivity를 종료시킨 것으로 생각된다.<br/>
+  그래서 PlayerActivity가 종료되면 ListActivity가 create 되면서 activity에 FolderListFragment를 추가하는 코드가 동작했기에 UI가 겹치는 문제가 발생한 것으로 생각된다.<br/>
+  
+  * 조치: 만약 ListActivity가 recreat시 기본 Fragment(FolderListFragment)를 추가 안 하게 조치했다.
+  ```kt
+    private var isDefault = true
+    override fun onCreate(savedInstanceState: Bundle?) {
+        ...
+        if (savedInstanceState != null) {
+            isDefault = savedInstanceState.getBoolean(isDefaultKey)
+        }
+        ...
+        initUi()
+    }
+    private fun initUi() {
+        if(isDefault) {
+            isDefault = false
+            addDefaultListFragment()
+        }
+        ...
+    }
+    private fun addDefaultListFragment() {
+        setAppbarTitleText(R.string.appbar_title_folder)
+        supportFragmentManager.beginTransaction().add(binding.recyclerViewContainer.id, FolderListFragment()).commit()
+    }
+     override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(isDefaultKey, isDefault)
+    }
+  ```
+  
+</details>
