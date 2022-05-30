@@ -14,10 +14,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RecentListViewModel(private val videoRepository: VideoRepository): ViewModel() {
-    val recentVideoItems = MutableLiveData<List<RecentVideoItem>>()
+    val recentVideoItems = MutableLiveData<List<RecentVideoItem>>().also { list() }
     val exceptionMessageResId = MutableLiveData<Int>()
 
-    fun list() {
+    private fun list() {
         viewModelScope.launch(Dispatchers.IO) {
             val recentVideoInfoFlow = videoRepository.getRecentVideosInfo()
             recentVideoInfoFlow.collect { recentVideoInfo ->

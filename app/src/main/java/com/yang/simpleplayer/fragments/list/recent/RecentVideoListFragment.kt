@@ -42,12 +42,6 @@ class RecentVideoListFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        // TODO: RecyclerView 최적화 필요
-        viewModel.list()
-    }
-
     private fun initUi() {
         val adapter = RecentVideoListAdapter().apply {
             itemViewOnclick = (activity as FragmentNeeds)::startPlayerActivity
@@ -62,10 +56,7 @@ class RecentVideoListFragment : Fragment() {
                 moreBtnStrArr.add(getString(R.string.add_to_playlist))
                 callbacks.add {(activity as FragmentNeeds).startPlaylistManageActivity(longArrayOf(video.id))}
                 moreBtnStrArr.add(getString(R.string.video_delete_from_recentList))
-                callbacks.add {
-                    viewModel.deletePlaybackDate(video.id)
-                    viewModel.list()
-                }
+                callbacks.add { viewModel.deletePlaybackDate(video.id) }
                 context?.let { MoreDialogFactory.create(it, moreBtnStrArr.toTypedArray(), *callbacks.toTypedArray()).show() }
             }
         }
