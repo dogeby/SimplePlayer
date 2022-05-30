@@ -63,7 +63,7 @@ Datastore, Preference로 구현한 앱 설정<br/>
 * Preference, Datastore
 ## 주요 트러블 슈팅
 <details>
-  <summary>드물게 동영상 플레이어(PlayerActivity) 종료 시 이전 UI 겹침 현상</summary>
+  <summary>낮은  동영상 플레이어(PlayerActivity) 종료 시 이전 UI 겹침 현상</summary>
   
   * 증상: 동영상 재생 화면에서 백 버튼 클릭 시 동영상 리스트 UI와 폴더 리스트 UI가 겹쳐서 나온다.<br/>
   한 번 더 백 버튼 클릭 시 두 폴더 리스트 UI가 겹쳐서 나온다.<br/>
